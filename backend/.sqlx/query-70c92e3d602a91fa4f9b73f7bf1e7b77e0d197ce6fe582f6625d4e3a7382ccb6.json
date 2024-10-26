@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            DELETE FROM session WHERE cookie_value = $1\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "70c92e3d602a91fa4f9b73f7bf1e7b77e0d197ce6fe582f6625d4e3a7382ccb6"
+}
