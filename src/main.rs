@@ -1,6 +1,6 @@
 use axum::http::{
-    header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE}
-    , Method,
+    header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE},
+    Method,
 };
 use axum::routing::{get, post};
 use axum::{middleware, Router};
@@ -12,10 +12,10 @@ use std::sync::Arc;
 use tokio::signal;
 use tower_http::cors::CorsLayer;
 
-mod models;
-mod handlers;
-mod schema;
 mod auth;
+mod handlers;
+mod models;
+mod schema;
 
 #[tokio::main]
 async fn main() {
@@ -32,12 +32,17 @@ async fn main() {
         .allow_origin([
             "http://localhost:5173".parse().unwrap(), // Local development
             "http://example.com".parse().unwrap(),    // Production
-            // Add other origins here
+                                                      // Add other origins here
         ])
-        .allow_methods([Method::GET, Method::POST, Method::PATCH, Method::DELETE, Method::OPTIONS])
+        .allow_methods([
+            Method::GET,
+            Method::POST,
+            Method::PATCH,
+            Method::DELETE,
+            Method::OPTIONS,
+        ])
         .allow_credentials(true)
         .allow_headers([AUTHORIZATION, ACCEPT, CONTENT_TYPE]);
-
 
     let app = Router::new()
         .route("/api/register", post(handlers::create_user))

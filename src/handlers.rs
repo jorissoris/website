@@ -1,6 +1,6 @@
 use crate::models::{DbPool, NewUser, SignInData, User};
-use axum::{extract::State, http::StatusCode, Extension, Json};
 use axum::response::IntoResponse;
+use axum::{extract::State, http::StatusCode, Extension, Json};
 use diesel::prelude::*;
 
 use crate::schema::users;
@@ -14,27 +14,33 @@ pub async fn hello(Extension(email): Extension<String>) -> impl IntoResponse {
 pub async fn create_user(
     State(db): State<DbPool>,
     Json(mut new_user): Json<NewUser>,
-) -> (StatusCode,Json<String>) {
-    let mut conn = db.get().map_err(|_| StatusCode::INTERNAL_SERVER_ERROR).unwrap();
+) -> (StatusCode, Json<String>) {
+    let mut conn = db
+        .get()
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
+        .unwrap();
 
-    new_user.password_hash = hash_password(&new_user.password_hash).map_err(|_| StatusCode::INTERNAL_SERVER_ERROR).unwrap();
+    new_user.password_hash = hash_password(&new_user.password_hash)
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
+        .unwrap();
 
     let user: User = diesel::insert_into(users::table)
         .values(&new_user)
         .get_result(&mut conn)
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR).unwrap();
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
+        .unwrap();
 
     let token = encode_jwt(user.email)
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR).unwrap();
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
+        .unwrap();
 
     (StatusCode::CREATED, Json(token))
 }
 
 pub async fn login(
     State(db): State<DbPool>,
-    Json(user_data): Json<SignInData>
+    Json(user_data): Json<SignInData>,
 ) -> Result<Json<String>, StatusCode> {
-
     // 1. Retrieve user from the database
     let user = match retrieve_user_by_email(&user_data.email, db) {
         Some(user) => user,
@@ -43,24 +49,30 @@ pub async fn login(
 
     // 2. Compare the password
     if !verify_password(&user_data.password, &user.password_hash)
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)? // Handle bcrypt errors
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+    // Handle bcrypt errors
     {
         return Err(StatusCode::UNAUTHORIZED); // Wrong password
     }
 
     // 3. Generate JWT
-    let token = encode_jwt(user.email)
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    let token = encode_jwt(user.email).map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
     // 4. Return the token
     Ok(Json(token))
 }
 
 fn retrieve_user_by_email(user_email: &str, db: DbPool) -> Option<User> {
-    let mut conn = db.get().map_err(|_| StatusCode::INTERNAL_SERVER_ERROR).unwrap();
+    let mut conn = db
+        .get()
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
+        .unwrap();
 
-    let current_user = users::table.filter(users::email.eq(user_email)).first::<User>(&mut conn)
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR).unwrap();
+    let current_user = users::table
+        .filter(users::email.eq(user_email))
+        .first::<User>(&mut conn)
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
+        .unwrap();
     Some(current_user)
 }
 

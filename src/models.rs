@@ -5,7 +5,7 @@ use diesel::r2d2::ConnectionManager;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 
-#[derive(Queryable,Serialize)]
+#[derive(Queryable, Serialize)]
 pub struct User {
     pub id: i32,
     pub email: String,
