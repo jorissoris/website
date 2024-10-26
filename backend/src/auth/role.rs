@@ -18,7 +18,7 @@ pub(crate) enum Role {
     // TODO extend
 }
 
-#[derive(sqlx::Type, Serialize, Deserialize, Debug)]
+#[derive(sqlx::Type, Serialize, Deserialize, Debug, Clone, Copy)]
 #[sqlx(type_name = "membership_status", rename_all = "snake_case")]
 #[serde(rename_all = "camelCase")]
 pub(crate) enum MembershipStatus {
@@ -26,4 +26,13 @@ pub(crate) enum MembershipStatus {
     Member,
     Extraordinary,
     NonMember,
+}
+
+impl MembershipStatus {
+    pub(crate) fn is_member(&self) -> bool {
+        match self {
+            MembershipStatus::Pending | MembershipStatus::NonMember => false,
+            MembershipStatus::Member | MembershipStatus::Extraordinary => true,
+        }
+    }
 }

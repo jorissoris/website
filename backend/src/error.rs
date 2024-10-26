@@ -1,11 +1,12 @@
 use argon2::password_hash;
-use axum::extract::rejection::JsonRejection;
+use axum::extract::rejection::{JsonRejection, QueryRejection};
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 use axum::Json;
 use serde::{Serialize, Serializer};
+use sqlx::error::DatabaseError;
 use std::env;
-use tracing::{error, trace, warn};
+use tracing::{error, info, trace, warn};
 use uuid::Uuid;
 use validator::ValidationErrors;
 
@@ -27,15 +28,25 @@ pub enum Error {
     Unauthorized,
     #[error("JSON error {0}")]
     AxumJson(#[from] JsonRejection),
+    #[error("Query error {0}")]
+    Query(#[from] QueryRejection),
     #[error("Validation failure: {0}")]
     Validation(#[from] ValidationErrors),
     #[error("Password hashing error {0}")]
     Argon2(password_hash::Error),
+    #[error("Conflict")]
+    Conflict(Box<dyn DatabaseError>),
+    #[error("Foreign key error")]
+    ForeignKeyConstraintViolated(Box<dyn DatabaseError>),
 }
 impl From<sqlx::Error> for Error {
     fn from(value: sqlx::Error) -> Self {
         match value {
             sqlx::Error::RowNotFound => Error::NotFound,
+            sqlx::Error::Database(err) if err.is_unique_violation() => Self::Conflict(err),
+            sqlx::Error::Database(err) if err.is_foreign_key_violation() => {
+                Self::ForeignKeyConstraintViolated(err)
+            }
             _ => Error::Sqlx(value),
         }
     }
@@ -94,6 +105,14 @@ impl IntoResponse for Error {
                     reference,
                 }
             }
+            Error::Query(err) => {
+                trace!(%reference, "Query error: {err}");
+                Problem {
+                    message: format!("Query error: {err}"),
+                    status: StatusCode::BAD_REQUEST,
+                    reference,
+                }
+            }
             Error::Validation(err) => {
                 trace!(%reference, "Validation error: {err}");
                 Problem {
@@ -115,6 +134,22 @@ impl IntoResponse for Error {
                 Problem {
                     message: "Password hashing error".to_string(),
                     status: StatusCode::INTERNAL_SERVER_ERROR,
+                    reference,
+                }
+            }
+            Error::Conflict(err) => {
+                info!(%reference, "Conflict: {err}");
+                Problem {
+                    message: "Conflict. Does this name already exist?".to_string(),
+                    status: StatusCode::CONFLICT,
+                    reference,
+                }
+            }
+            Error::ForeignKeyConstraintViolated(err) => {
+                info!(%reference, "Foreign key violation: {err}");
+                Problem {
+                    message: "Foreign key violation".to_string(),
+                    status: StatusCode::UNPROCESSABLE_ENTITY,
                     reference,
                 }
             }

@@ -5,7 +5,7 @@ use time::OffsetDateTime;
 use uuid::Uuid;
 use validator::Validate;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Eq)]
 #[serde(transparent)]
 pub struct UserId(Uuid);
 
@@ -38,7 +38,7 @@ pub struct User {
 
 #[derive(Serialize, Deserialize, Debug, Validate)]
 #[serde(rename_all = "camelCase")]
-pub struct UserContent {
+pub(crate) struct UserContent {
     #[validate(length(min = 1, max = 100))]
     pub first_name: String,
     #[validate(length(min = 1, max = 100))]
@@ -50,9 +50,27 @@ pub struct UserContent {
 }
 
 #[derive(Deserialize, Validate)]
+#[serde(rename_all = "camelCase")]
 pub struct UserCredentials {
     #[validate(email)]
     pub email: String,
     #[validate(length(min = 1, max = 128))]
+    pub password: String,
+}
+
+#[derive(Serialize, Deserialize, Validate)]
+#[serde(rename_all = "camelCase")]
+pub struct RegisterNewUser {
+    #[validate(length(min = 1, max = 100))]
+    pub first_name: String,
+    #[validate(length(min = 1, max = 100))]
+    pub last_name: String,
+    #[validate(email)]
+    pub email: String,
+    #[validate(length(
+        min = 10,
+        max = 128,
+        message = "Password must contain between 10 and 128 characters"
+    ))]
     pub password: String,
 }

@@ -5,15 +5,15 @@ use tokio::signal;
 use tracing::info;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
+use tracing_subscriber::{fmt, EnvFilter};
 
 #[tokio::main]
 async fn main() {
     tracing_subscriber::registry()
-        .with(tracing_subscriber::EnvFilter::new(
-            std::env::var("RUST_LOG").unwrap_or_else(|_| {
-                "memory_serve=info,nijsac_website_backend=trace,tower_http=info,sqlx=info".into()
-            }),
-        ))
+        .with(fmt::layer().with_file(true).with_line_number(true))
+        .with(EnvFilter::new(std::env::var("RUST_LOG").unwrap_or_else(
+            |_| "memory_serve=info,nijsac_website_backend=trace,tower_http=info,sqlx=info".into(),
+        )))
         .init();
 
     let state = AppState::new().await.unwrap();

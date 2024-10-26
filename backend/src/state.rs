@@ -10,7 +10,7 @@ use std::sync::Arc;
 
 pub struct Config {
     database_url: String,
-    version: String,
+    pub version: String,
 }
 
 impl Config {

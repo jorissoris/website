@@ -1,7 +1,10 @@
-use crate::auth::login;
+use crate::api::{get_all_users, register, update_user, who_am_i};
+use crate::auth::{login, logout};
+use crate::get_user;
 use crate::state::AppState;
-use axum::routing::post;
-use axum::Router;
+use axum::extract::State;
+use axum::routing::{get, post};
+use axum::{Json, Router};
 use memory_serve::{load_assets, MemoryServe};
 use tower_http::trace;
 use tower_http::trace::TraceLayer;
@@ -24,5 +27,16 @@ pub fn create_router(state: AppState) -> Router {
 }
 
 fn api_router() -> Router<AppState> {
-    Router::new().route("/login", post(login))
+    Router::new()
+        .route("/version", get(version))
+        .route("/whoami", get(who_am_i))
+        .route("/login", post(login))
+        .route("/logout", get(logout))
+        .route("/register", post(register))
+        .route("/user", get(get_all_users))
+        .route("/user/:id", get(get_user).put(update_user))
+}
+
+async fn version(State(state): State<AppState>) -> Json<String> {
+    Json(state.config().version.clone())
 }

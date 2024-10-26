@@ -1,6 +1,7 @@
 use crate::auth::role::{MembershipStatus, Roles};
 use crate::auth::COOKIE_NAME;
 use crate::error::{AppResult, Error};
+use crate::user::UserId;
 use crate::wire::user::UserCredentials;
 use crate::AppState;
 use argon2::{password_hash, Argon2, PasswordHash, PasswordVerifier};
@@ -10,20 +11,16 @@ use axum::http::request::Parts;
 use axum_extra::extract::cookie::Cookie;
 use axum_extra::extract::CookieJar;
 use rand::distributions::{Alphanumeric, DistString};
-use serde::Serialize;
 use sqlx::PgPool;
 use time::OffsetDateTime;
 use tracing::trace;
 use uuid::Uuid;
 
-#[derive(Serialize)]
-pub(super) struct Session {
-    user_id: Uuid,
-    #[serde(skip)]
+pub(crate) struct Session {
+    user_id: UserId,
     cookie_value: String,
     roles: Roles,
     membership_status: MembershipStatus,
-    #[serde(skip)]
     expiration: OffsetDateTime,
 }
 
@@ -40,7 +37,7 @@ impl TryFrom<PgSession> for Session {
 
     fn try_from(pg: PgSession) -> Result<Self, Self::Error> {
         Ok(Self {
-            user_id: pg.user_id,
+            user_id: pg.user_id.into(),
             cookie_value: pg.cookie_value,
             roles: serde_json::from_value(pg.roles)?,
             membership_status: pg.status,
@@ -55,6 +52,18 @@ struct PwHash {
 }
 
 impl Session {
+    pub fn roles(&self) -> &Roles {
+        &self.roles
+    }
+
+    pub fn membership_status(&self) -> MembershipStatus {
+        self.membership_status
+    }
+
+    pub fn user_id(&self) -> &UserId {
+        &self.user_id
+    }
+
     pub fn into_cookie(self) -> Cookie<'static> {
         Cookie::build((COOKIE_NAME, self.cookie_value))
             .secure(true)
@@ -151,6 +160,18 @@ impl Session {
         trace!("Created new session for user {}", credentials.email);
 
         Ok(session)
+    }
+
+    pub async fn delete(self, db: &PgPool) -> AppResult<()> {
+        sqlx::query!(
+            r#"
+            DELETE FROM session WHERE cookie_value = $1
+            "#,
+            self.cookie_value
+        )
+        .execute(db)
+        .await?;
+        Ok(())
     }
 }
 

@@ -1,6 +1,14 @@
 use crate::auth::role::MembershipStatus;
+use crate::data_source::Count;
 use crate::error::{AppResult, Error};
 use crate::wire::user::{User, UserContent, UserId};
+use crate::{AppState, Pagination};
+use argon2::password_hash::rand_core::OsRng;
+use argon2::password_hash::SaltString;
+use argon2::{Argon2, PasswordHasher};
+use axum::async_trait;
+use axum::extract::FromRequestParts;
+use axum::http::request::Parts;
 use sqlx::PgPool;
 use std::ops::Deref;
 use time::OffsetDateTime;
@@ -8,6 +16,20 @@ use uuid::Uuid;
 
 pub(crate) struct UserStore {
     db: PgPool,
+}
+
+#[async_trait]
+impl FromRequestParts<AppState> for UserStore {
+    type Rejection = Error;
+
+    async fn from_request_parts(
+        _parts: &mut Parts,
+        state: &AppState,
+    ) -> Result<Self, Self::Rejection> {
+        Ok(Self {
+            db: state.pool().clone(),
+        })
+    }
 }
 
 #[derive(Debug)]
@@ -42,7 +64,19 @@ impl TryFrom<PgUser> for User {
 }
 
 impl UserStore {
-    pub async fn create(&self, new: UserContent) -> AppResult<User> {
+    pub async fn count(&self) -> Result<Count, Error> {
+        let count = sqlx::query_as!(
+            Count,
+            r#"
+            SELECT COUNT(*) AS "count!" FROM "user"
+            "#
+        )
+        .fetch_one(&self.db)
+        .await?;
+        Ok(count)
+    }
+
+    pub async fn create(&self, new: &UserContent) -> AppResult<User> {
         sqlx::query_as!(
             PgUser,
             r#"
@@ -105,5 +139,122 @@ impl UserStore {
         .fetch_one(&self.db)
         .await?
         .try_into()
+    }
+
+    pub async fn get_all(&self, pagination: &Pagination) -> AppResult<Vec<User>> {
+        sqlx::query_as!(
+            PgUser,
+            r#"
+            SELECT 
+                id,
+                first_name,
+                last_name,
+                roles,
+                status AS "status: MembershipStatus",
+                email,
+                created,
+                updated
+            FROM "user"
+            ORDER BY last_name
+            LIMIT $1
+            OFFSET $2
+            "#,
+            pagination.limit,
+            pagination.offset
+        )
+        .fetch_all(&self.db)
+        .await?
+        .into_iter()
+        .map(TryInto::try_into)
+        .collect()
+    }
+
+    pub async fn update(&self, id: &UserId, user: UserContent) -> AppResult<User> {
+        sqlx::query_as!(
+            PgUser,
+            r#"
+            UPDATE "user"
+            SET first_name = $2,
+                last_name = $3,
+                roles = $4,
+                status = $5,
+                email = $6,
+                updated = now()
+            WHERE id = $1
+            RETURNING
+                id,
+                first_name,
+                last_name,
+                roles,
+                status AS "status: MembershipStatus",
+                email,
+                created,
+                updated
+            "#,
+            id.deref(),
+            user.first_name,
+            user.last_name,
+            serde_json::to_value(&user.roles)?,
+            user.status as MembershipStatus,
+            user.email,
+        )
+        .fetch_one(&self.db)
+        .await?
+        .try_into()
+    }
+
+    pub async fn update_email(&self, id: &UserId, email: &str) -> AppResult<User> {
+        sqlx::query_as!(
+            PgUser,
+            r#"
+            UPDATE "user"
+            SET email = $2,
+                updated = now()
+            WHERE id = $1
+            RETURNING
+                id,
+                first_name,
+                last_name,
+                roles,
+                status AS "status: MembershipStatus",
+                email,
+                created,
+                updated
+            "#,
+            id.deref(),
+            email,
+        )
+        .fetch_one(&self.db)
+        .await?
+        .try_into()
+    }
+
+    pub async fn update_pwd(&self, id: &UserId, new_pw: Option<&str>) -> AppResult<()> {
+        let pwd_hash = match new_pw {
+            Some(pwd) => {
+                let salt = SaltString::generate(&mut OsRng);
+                let hash = Argon2::default()
+                    .hash_password(pwd.as_bytes(), &salt)
+                    .map_err(Error::Argon2)?
+                    .to_string();
+                Some(hash)
+            }
+            None => None,
+        };
+
+        sqlx::query!(
+            r#"
+            UPDATE "user" 
+            SET pw_hash = $2,
+                updated = now()
+            WHERE id = $1
+            "#,
+            id.deref(),
+            pwd_hash,
+        )
+        .execute(&self.db)
+        .await?;
+
+        Ok(())
     }
 }
