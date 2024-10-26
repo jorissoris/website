@@ -1,19 +1,19 @@
-import { Dispatch, SetStateAction, useState } from 'react';
-import { Button, IconButton, TextField } from '@mui/material';
-import { Close } from '@mui/icons-material';
-import { useAuth } from '../providers/AuthProvider.tsx';
-import { useAlert } from '../providers/AlertProvider.tsx';
+import {Dispatch, SetStateAction, useState} from 'react';
+import {Button, IconButton, TextField} from '@mui/material';
+import {Close} from '@mui/icons-material';
+import {useAuth} from '../providers/AuthProvider.tsx';
+import {useAlert} from '../providers/AlertProvider.tsx';
 import PasswordInput from './PasswordInput.tsx';
 
 export default function SignupForm({
-  onClose,
-  setLoading
-}: {
+                                     onClose,
+                                     setLoading
+                                   }: {
   onClose: () => void;
   setLoading: Dispatch<SetStateAction<boolean>>;
 }) {
-  const { login } = useAuth();
-  const { changeAlert } = useAlert();
+  const {login} = useAuth();
+  const {changeAlert} = useAlert();
   const [email, setEmail] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -31,22 +31,22 @@ export default function SignupForm({
 
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8080/api/register', {
+      const response = await fetch('/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           email: email,
-          first_name: firstName,
-          last_name: lastName,
-          password_hash: password
+          firstName: firstName,
+          lastName: lastName,
+          password: password
         })
       });
       switch (response.status) {
-        case 201:
+        case 201: {
           const token: string = await response.json();
-          login({ token });
+          login({token});
           onClose();
           changeAlert({
             title: 'Success',
@@ -54,6 +54,7 @@ export default function SignupForm({
             severity: 'success'
           });
           break;
+        }
         case 403:
           changeAlert({
             title: "Couldn't create account",
@@ -92,7 +93,7 @@ export default function SignupForm({
         <div className="flex justify-between">
           <p className="text-2xl">Sign Up</p>
           <IconButton onClick={onClose}>
-            <Close />
+            <Close/>
           </IconButton>
         </div>
         <TextField
@@ -116,7 +117,7 @@ export default function SignupForm({
           onChange={(e) => setLastName(e.target.value)}
           className="w-full"
         />
-        <PasswordInput setPassword={setPassword} />
+        <PasswordInput setPassword={setPassword}/>
         <Button variant="contained" onClick={handleSubmit}>
           Sign Up
         </Button>

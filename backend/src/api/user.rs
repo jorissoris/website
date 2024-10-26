@@ -6,7 +6,7 @@ use crate::error::{AppResult, Error};
 use crate::user::{RegisterNewUser, User, UserContent, UserId};
 use crate::Pagination;
 use axum::extract::Path;
-use axum::http::HeaderMap;
+use axum::http::{HeaderMap, StatusCode};
 use axum::Json;
 
 fn read_access(id: &UserId, session: &Session) -> AppResult<()> {
@@ -53,7 +53,7 @@ fn update_access(id: &UserId, session: &Session) -> AppResult<UpdateAccess> {
 pub(crate) async fn register(
     store: UserStore,
     ValidatedJson(new): ValidatedJson<RegisterNewUser>,
-) -> ApiResult<User> {
+) -> AppResult<(StatusCode, Json<User>)> {
     let user = UserContent {
         first_name: new.first_name,
         last_name: new.last_name,
@@ -65,7 +65,7 @@ pub(crate) async fn register(
     let user = store.create(&user).await?;
     store.update_pwd(&user.id, Some(&new.password)).await?;
 
-    Ok(Json(user))
+    Ok((StatusCode::CREATED, Json(user)))
 }
 
 pub(crate) async fn who_am_i(store: UserStore, session: Session) -> ApiResult<User> {

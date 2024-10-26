@@ -98,7 +98,7 @@ impl IntoResponse for Error {
                 }
             }
             Error::AxumJson(err) => {
-                trace!(%reference, "Json error: {err}");
+                trace!(%reference, "Json error: {err:?}");
                 Problem {
                     message: format!("Json error: {err}"),
                     status: StatusCode::BAD_REQUEST,

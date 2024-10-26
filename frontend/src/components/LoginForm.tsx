@@ -1,19 +1,19 @@
-import { Dispatch, SetStateAction, useState } from 'react';
-import { Button, IconButton, TextField } from '@mui/material';
-import { Close } from '@mui/icons-material';
-import { useAuth } from '../providers/AuthProvider.tsx';
-import { useAlert } from '../providers/AlertProvider.tsx';
+import {Dispatch, SetStateAction, useState} from 'react';
+import {Button, IconButton, TextField} from '@mui/material';
+import {Close} from '@mui/icons-material';
+import {useAuth} from '../providers/AuthProvider.tsx';
+import {useAlert} from '../providers/AlertProvider.tsx';
 import PasswordInput from './PasswordInput.tsx';
 
 export default function LoginForm({
-  onClose,
-  setLoading
-}: {
+                                    onClose,
+                                    setLoading
+                                  }: {
   onClose: () => void;
   setLoading: Dispatch<SetStateAction<boolean>>;
 }) {
-  const { login } = useAuth();
-  const { changeAlert } = useAlert();
+  const {login} = useAuth();
+  const {changeAlert} = useAlert();
   const [email, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
@@ -29,7 +29,7 @@ export default function LoginForm({
 
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8080/api/login', {
+      const response = await fetch('/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -40,9 +40,9 @@ export default function LoginForm({
         })
       });
       switch (response.status) {
-        case 200:
+        case 200: {
           const token: string = await response.json();
-          login({ token });
+          login({token});
           onClose();
           changeAlert({
             title: 'Success',
@@ -50,6 +50,7 @@ export default function LoginForm({
             severity: 'success'
           });
           break;
+        }
         case 401:
           changeAlert({
             title: 'Incorrect username or password',
@@ -88,7 +89,7 @@ export default function LoginForm({
         <div className="flex justify-between">
           <p className="text-2xl">Log In</p>
           <IconButton onClick={onClose}>
-            <Close />
+            <Close/>
           </IconButton>
         </div>
         <TextField
@@ -98,7 +99,7 @@ export default function LoginForm({
           value={email}
           onChange={(e) => setUsername(e.target.value)}
         />
-        <PasswordInput setPassword={setPassword} />
+        <PasswordInput setPassword={setPassword}/>
         <Button variant="contained" onClick={handleSubmit}>
           Log In
         </Button>
