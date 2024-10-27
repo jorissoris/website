@@ -4,8 +4,9 @@ import { useTheme } from './providers/ThemeProvider.tsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ErrorPage from './pages/ErrorPage.tsx';
 import Home from './pages/Home.tsx';
-import { Alert, AlertTitle, Snackbar } from '@mui/material';
-import { useAlert } from './providers/AlertProvider.tsx';
+import { SnackbarProvider } from 'notistack';
+import Success from './alerts/Success.tsx';
+import Error from './alerts/Error.tsx';
 
 const router = createBrowserRouter([
   {
@@ -17,7 +18,6 @@ const router = createBrowserRouter([
 
 export default function App() {
   const { themeCookie } = useTheme();
-  const { open, alert, handleClose } = useAlert();
 
   const darkTheme = createTheme({
     palette: {
@@ -29,12 +29,15 @@ export default function App() {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <RouterProvider router={router} />
-      <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={alert?.severity} variant="filled">
-          <AlertTitle>{alert?.title}</AlertTitle>
-          {alert?.text}
-        </Alert>
-      </Snackbar>
+      <SnackbarProvider
+        maxSnack={3}
+        autoHideDuration={3000}
+        preventDuplicate
+        Components={{
+          success: Success,
+          error: Error
+        }}
+      />
     </ThemeProvider>
   );
 }

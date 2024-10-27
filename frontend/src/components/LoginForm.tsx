@@ -1,34 +1,25 @@
-import {Dispatch, SetStateAction, useState} from 'react';
-import {Button, IconButton, TextField} from '@mui/material';
-import {Close} from '@mui/icons-material';
-import {useAuth} from '../providers/AuthProvider.tsx';
-import {useAlert} from '../providers/AlertProvider.tsx';
+import { useState } from 'react';
+import { Button, IconButton, TextField } from '@mui/material';
+import { Close } from '@mui/icons-material';
 import PasswordInput from './PasswordInput.tsx';
+import { Forms } from '../types.ts';
+import { enqueueSnackbar } from 'notistack';
 
-export default function LoginForm({
-                                    onClose,
-                                    setLoading
-                                  }: {
-  onClose: () => void;
-  setLoading: Dispatch<SetStateAction<boolean>>;
-}) {
-  const {login} = useAuth();
-  const {changeAlert} = useAlert();
+export default function LoginForm({ onClose, handleLoadingTrue, handleLoadingFalse }: Forms) {
   const [email, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
   const handleSubmit = async () => {
     if (email === '' || password === '') {
-      changeAlert({
-        title: 'Invalid credentials',
-        text: 'Please fill in email and password.',
-        severity: 'error'
+      enqueueSnackbar('Please fill in email and password.', {
+        variant: 'error',
+        title: 'Invalid credentials'
       });
       return;
     }
 
     try {
-      setLoading(true);
+      handleLoadingTrue();
       const response = await fetch('/api/login', {
         method: 'POST',
         headers: {
@@ -41,45 +32,38 @@ export default function LoginForm({
       });
       switch (response.status) {
         case 200: {
-          const token: string = await response.json();
-          login({token});
           onClose();
-          changeAlert({
-            title: 'Success',
-            text: 'You logged in.',
-            severity: 'success'
+          enqueueSnackbar('You logged in.', {
+            variant: 'success',
+            title: 'Success'
           });
           break;
         }
         case 401:
-          changeAlert({
-            title: 'Incorrect username or password',
-            text: 'Did you spell everything correctly?',
-            severity: 'error'
+          enqueueSnackbar('Did you spell everything correctly?', {
+            variant: 'error',
+            title: 'Incorrect username or password'
           });
           break;
         case 500:
-          changeAlert({
-            title: 'Internal Server Error',
-            text: 'Something went wrong. Please try again later.',
-            severity: 'error'
+          enqueueSnackbar('Something went wrong. Please try again later.', {
+            variant: 'error',
+            title: 'Internal Server Error'
           });
           break;
         default:
-          changeAlert({
-            title: 'Error',
-            text: 'Something went wrong. Please try again later.',
-            severity: 'error'
+          enqueueSnackbar('Something went wrong. Please try again later.', {
+            variant: 'error',
+            title: 'Error'
           });
       }
     } catch (error) {
-      changeAlert({
-        title: 'Error: ' + error,
-        text: 'Are you connected to the internet?',
-        severity: 'error'
+      enqueueSnackbar('Are you connected to the internet?', {
+        variant: 'error',
+        title: 'Error: ' + error
       });
     } finally {
-      setLoading(false);
+      handleLoadingFalse();
     }
   };
 
@@ -89,7 +73,7 @@ export default function LoginForm({
         <div className="flex justify-between">
           <p className="text-2xl">Log In</p>
           <IconButton onClick={onClose}>
-            <Close/>
+            <Close />
           </IconButton>
         </div>
         <TextField
@@ -99,7 +83,7 @@ export default function LoginForm({
           value={email}
           onChange={(e) => setUsername(e.target.value)}
         />
-        <PasswordInput setPassword={setPassword}/>
+        <PasswordInput setPassword={setPassword} />
         <Button variant="contained" onClick={handleSubmit}>
           Log In
         </Button>

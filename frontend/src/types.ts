@@ -1,5 +1,4 @@
-import { SyntheticEvent } from 'react';
-import { SnackbarCloseReason } from '@mui/material';
+import { CustomContentProps } from 'notistack';
 
 export interface User {
   id: number;
@@ -9,27 +8,23 @@ export interface User {
   password_hash: string;
 }
 
-export interface AlertType {
-  title: string;
-  text: string;
-  severity?: 'success' | 'info' | 'warning' | 'error';
+export interface AlertProps extends CustomContentProps {
+  title?: string;
 }
 
 export interface AuthContextType {
-  authCookie: { [x: string]: any };
-  login: (data: { token: string }) => void;
+  isLoggedIn: boolean;
+  checkAuth: () => void;
   logout: () => void;
-  checkAuth: () => boolean;
 }
 
 export interface ThemeContextType {
-  themeCookie: { [x: string]: any };
+  themeCookie: { [x: string]: never };
   toggleTheme: () => void;
 }
 
-export interface AlertContextType {
-  open: boolean;
-  alert: AlertType | undefined;
-  changeAlert: (alert: AlertType) => void;
-  handleClose: (_event?: SyntheticEvent | Event, reason?: SnackbarCloseReason) => void;
+export interface Forms {
+  onClose: () => void;
+  handleLoadingTrue: () => void;
+  handleLoadingFalse: () => void;
 }

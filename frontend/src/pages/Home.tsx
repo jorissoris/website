@@ -3,48 +3,44 @@ import AuthDialog from '../components/AuthDialog.tsx';
 import { useState } from 'react';
 import { useAuth } from '../providers/AuthProvider.tsx';
 import { useTheme } from '../providers/ThemeProvider.tsx';
-import { useAlert } from '../providers/AlertProvider.tsx';
+import { enqueueSnackbar } from 'notistack';
 
 export default function Home() {
-  const { authCookie, logout, checkAuth } = useAuth();
+  const { isLoggedIn, logout, checkAuth } = useAuth();
   const { themeCookie, toggleTheme } = useTheme();
-  const { changeAlert } = useAlert();
   const [authDialogOpen, setAuthDialogOpen] = useState<boolean>(false);
   const handleAuthOpen = () => setAuthDialogOpen(true);
   const handleAuthClose = () => setAuthDialogOpen(false);
 
+  checkAuth();
+
   const handleTestToken = async () => {
-    const response = await fetch('/api/test', {
-      headers: { Authorization: 'Bearer ' + authCookie.token }
-    });
+    const response = await fetch('/api/whoami');
     switch (response.status) {
-      case 200:
-        const email = await response.json();
-        changeAlert({
-          title: 'It worked!',
-          text: 'Your email is: ' + email,
-          severity: 'success'
+      case 200: {
+        const body = await response.json();
+        enqueueSnackbar('Your email is: ' + body.email, {
+          variant: 'success',
+          title: 'It works!'
         });
         break;
+      }
       case 401:
-        changeAlert({
-          title: 'Unauthorized user',
-          text: 'Please log in and try again..',
-          severity: 'error'
+        enqueueSnackbar('Please log in and try again.', {
+          variant: 'error',
+          title: 'Unauthorized user'
         });
         break;
       case 500:
-        changeAlert({
-          title: 'Internal Server Error',
-          text: 'Something went wrong. Please try again later.',
-          severity: 'error'
+        enqueueSnackbar('Something went wrong. Please try again later.', {
+          variant: 'error',
+          title: 'Internal Server Error'
         });
         break;
       default:
-        changeAlert({
-          title: 'Error',
-          text: 'Something went wrong. Please try again later.',
-          severity: 'error'
+        enqueueSnackbar('Something went wrong. Please try again later.', {
+          variant: 'error',
+          title: 'Error'
         });
     }
   };
@@ -53,7 +49,7 @@ export default function Home() {
     <>
       <div className="flex flex-col justify-center items-center h-screen">
         <div className="grid grid-cols-2 grid-flow-row gap-4 w-1/3">
-          {checkAuth() ? (
+          {isLoggedIn ? (
             <Button variant="contained" onClick={logout}>
               Logout
             </Button>
@@ -68,7 +64,7 @@ export default function Home() {
           </Button>
           <Alert severity="info" variant="outlined" className="col-span-2">
             <AlertTitle>Are you logged in?</AlertTitle>
-            <p className="text-xl">{checkAuth() ? 'Yes, you are.' : 'No, you are not.'}</p>
+            <p className="text-xl">{isLoggedIn ? 'Yes, you are.' : 'No, you are not.'}</p>
           </Alert>
           <Alert severity="info" variant="outlined" className="col-span-2">
             <AlertTitle>What theme do you prefer?</AlertTitle>

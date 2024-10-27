@@ -1,19 +1,11 @@
-import {Dispatch, SetStateAction, useState} from 'react';
-import {Button, IconButton, TextField} from '@mui/material';
-import {Close} from '@mui/icons-material';
-import {useAuth} from '../providers/AuthProvider.tsx';
-import {useAlert} from '../providers/AlertProvider.tsx';
+import { useState } from 'react';
+import { Button, IconButton, TextField } from '@mui/material';
+import { Close } from '@mui/icons-material';
 import PasswordInput from './PasswordInput.tsx';
+import { Forms } from '../types.ts';
+import { enqueueSnackbar } from 'notistack';
 
-export default function SignupForm({
-                                     onClose,
-                                     setLoading
-                                   }: {
-  onClose: () => void;
-  setLoading: Dispatch<SetStateAction<boolean>>;
-}) {
-  const {login} = useAuth();
-  const {changeAlert} = useAlert();
+export default function SignupForm({ onClose, handleLoadingTrue, handleLoadingFalse }: Forms) {
   const [email, setEmail] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -21,16 +13,15 @@ export default function SignupForm({
 
   const handleSubmit = async () => {
     if (email === '' || firstName === '' || lastName === '' || password === '') {
-      changeAlert({
-        title: 'Invalid credentials',
-        text: 'Please fill in everything.',
-        severity: 'error'
+      enqueueSnackbar('Please fill in everything.', {
+        variant: 'error',
+        title: 'Invalid credentials'
       });
       return;
     }
 
     try {
-      setLoading(true);
+      handleLoadingTrue();
       const response = await fetch('/api/register', {
         method: 'POST',
         headers: {
@@ -46,44 +37,39 @@ export default function SignupForm({
       switch (response.status) {
         case 201: {
           const token: string = await response.json();
-          login({token});
+          console.log(token);
           onClose();
-          changeAlert({
-            title: 'Success',
-            text: 'Created account: ' + firstName + ' ' + lastName,
-            severity: 'success'
+          enqueueSnackbar('Created account: ' + firstName + ' ' + lastName, {
+            variant: 'success',
+            title: 'Success'
           });
           break;
         }
         case 403:
-          changeAlert({
-            title: "Couldn't create account",
-            text: 'Try using a different username.',
-            severity: 'error'
+          enqueueSnackbar('Try using a different username.', {
+            variant: 'error',
+            title: "Couldn't create account"
           });
           break;
         case 500:
-          changeAlert({
-            title: 'Internal Server Error',
-            text: 'Something went wrong. Please try again later.',
-            severity: 'error'
+          enqueueSnackbar('Something went wrong. Please try again later.', {
+            variant: 'error',
+            title: 'Internal Server Error'
           });
           break;
         default:
-          changeAlert({
-            title: 'Error',
-            text: 'Something went wrong. Please try again later.',
-            severity: 'error'
+          enqueueSnackbar('Something went wrong. Please try again later.', {
+            variant: 'error',
+            title: 'Error'
           });
       }
     } catch (error) {
-      changeAlert({
-        title: 'Error: ' + error,
-        text: 'Are you connected to the internet?',
-        severity: 'error'
+      enqueueSnackbar('Are you connected to the internet?', {
+        variant: 'error',
+        title: 'Error: ' + error
       });
     } finally {
-      setLoading(false);
+      handleLoadingFalse();
     }
   };
 
@@ -93,7 +79,7 @@ export default function SignupForm({
         <div className="flex justify-between">
           <p className="text-2xl">Sign Up</p>
           <IconButton onClick={onClose}>
-            <Close/>
+            <Close />
           </IconButton>
         </div>
         <TextField
@@ -117,7 +103,7 @@ export default function SignupForm({
           onChange={(e) => setLastName(e.target.value)}
           className="w-full"
         />
-        <PasswordInput setPassword={setPassword}/>
+        <PasswordInput setPassword={setPassword} />
         <Button variant="contained" onClick={handleSubmit}>
           Sign Up
         </Button>
