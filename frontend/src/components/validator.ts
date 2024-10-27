@@ -1,5 +1,5 @@
 export const nameValidator = (value: string): string | false => {
-  if (value.length < 1) return 'Name must be at least 1 characters long';
+  if (value.length < 3) return 'Name must be at least 3 characters long';
   if (value.length > 20) return 'Name must be less than 20 characters long';
   if (!/^[a-zA-Z ]+$/.test(value)) return 'Name must contain only letters and spaces';
   return false;
@@ -11,9 +11,11 @@ export const emailValidator = (value: string): string | false => {
   return false;
 };
 
-export const passwordValidator = (
-  value: ((prevState: string) => string) | string
-): string | false => {
+export const passwordValidator = (value: string): string | false => {
   if (value.length < 10) return 'Password must be at least 10 characters long';
+  return false;
+};
+
+export const noneValidator = (_value: string): string | false => {
   return false;
 };

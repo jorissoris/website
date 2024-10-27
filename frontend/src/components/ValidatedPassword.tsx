@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, MouseEvent, SetStateAction, useState } from 'react';
+import { ChangeEvent, MouseEvent, useState } from 'react';
 import {
   FormControl,
   IconButton,
@@ -8,13 +8,9 @@ import {
   FormHelperText
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { passwordValidator } from './validator.ts';
+import { ValidateProps } from '../types.ts';
 
-interface PasswordInputProps {
-  setPassword: Dispatch<SetStateAction<string>>;
-}
-
-export default function PasswordInput({ setPassword }: PasswordInputProps) {
+export default function ValidatedPassword({ label, validator, onChange, setValue }: ValidateProps) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [error, setError] = useState<string | false>(false);
 
@@ -25,8 +21,10 @@ export default function PasswordInput({ setPassword }: PasswordInputProps) {
 
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    setPassword(newValue);
-    setError(passwordValidator(newValue)); // Set error message if validation fails
+    setValue(newValue);
+    const errorMessage = validator(newValue);
+    setError(errorMessage);
+    onChange(!errorMessage);
   };
 
   return (
@@ -46,7 +44,7 @@ export default function PasswordInput({ setPassword }: PasswordInputProps) {
             </IconButton>
           </InputAdornment>
         }
-        label="Password"
+        label={label}
       />
       {error && <FormHelperText>{error}</FormHelperText>}
     </FormControl>

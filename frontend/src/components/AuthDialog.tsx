@@ -3,7 +3,12 @@ import { useState } from 'react';
 import SignupForm from './SignupForm.tsx';
 import LoginForm from './LoginForm.tsx';
 
-export default function AuthDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+interface AuthDialogProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+export default function AuthDialog({ open, onClose }: AuthDialogProps) {
   const [login, setLogin] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 

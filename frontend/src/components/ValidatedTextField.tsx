@@ -1,21 +1,13 @@
 import { TextField } from '@mui/material';
-import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
-
-interface ValidatedTextFieldProps {
-  label: string;
-  validator: (value: string) => string | false;
-  onChange: (isValid: boolean) => void;
-  value: string;
-  setValue: Dispatch<SetStateAction<string>>;
-}
+import { ChangeEvent, useState } from 'react';
+import { ValidateProps } from '../types.ts';
 
 export default function ValidatedTextField({
   label,
   validator,
   onChange,
-  value,
   setValue
-}: ValidatedTextFieldProps) {
+}: ValidateProps) {
   const [error, setError] = useState<string | false>(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -28,12 +20,11 @@ export default function ValidatedTextField({
 
   return (
     <TextField
-      label={label}
-      value={value}
       onChange={handleChange}
       error={!!error}
       helperText={error || ''}
       fullWidth
+      label={label}
     />
   );
 }

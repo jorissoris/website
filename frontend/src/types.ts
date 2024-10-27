@@ -15,11 +15,18 @@ export interface AuthContextType {
 }
 
 export interface ThemeContextType {
-  themeCookie: { [x: string]: unknown };
+  themeCookie: { [x: string]: boolean };
   toggleTheme: () => void;
 }
 
 export interface FormsProps {
   onClose: () => void;
   setLoading: Dispatch<SetStateAction<boolean>>;
+}
+
+export interface ValidateProps {
+  label: string;
+  validator: (value: string) => string | false;
+  onChange: (isValid: boolean) => void;
+  setValue: Dispatch<SetStateAction<string>>;
 }

@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { Button, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import PasswordInput from './PasswordInput';
+import ValidatedPassword from './ValidatedPassword.tsx';
 import { FormsProps } from '../types';
 import { enqueueSnackbar } from 'notistack';
 import ValidatedTextField from './ValidatedTextField';
@@ -63,31 +63,28 @@ export default function SignupForm({ onClose, setLoading }: FormsProps) {
         </IconButton>
       </div>
       <ValidatedTextField
-        label="Email"
+        label={'Email'}
         validator={emailValidator}
         onChange={(isValid) => (formValid.current.email = isValid)}
-        value={email}
         setValue={setEmail}
       />
       <ValidatedTextField
-        label="First Name"
+        label={'First Name'}
         validator={nameValidator}
         onChange={(isValid) => (formValid.current.firstName = isValid)}
-        value={firstName}
         setValue={setFirstName}
       />
       <ValidatedTextField
-        label="Last Name"
+        label={'Last Name'}
         validator={nameValidator}
         onChange={(isValid) => (formValid.current.lastName = isValid)}
-        value={lastName}
         setValue={setLastName}
       />
-      <PasswordInput
-        setPassword={(value) => {
-          setPassword(value);
-          formValid.current.password = !passwordValidator(value);
-        }}
+      <ValidatedPassword
+        label={'Password'}
+        validator={passwordValidator}
+        onChange={(isValid) => (formValid.current.password = isValid)}
+        setValue={setPassword}
       />
       <Button variant="contained" onClick={handleSubmit}>
         Sign Up

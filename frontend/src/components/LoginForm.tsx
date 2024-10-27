@@ -1,11 +1,11 @@
 import { useState, useRef } from 'react';
 import { Button, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import PasswordInput from './PasswordInput';
+import ValidatedPassword from './ValidatedPassword.tsx';
 import { FormsProps } from '../types';
 import { enqueueSnackbar } from 'notistack';
 import ValidatedTextField from './ValidatedTextField';
-import { emailValidator, passwordValidator } from './validator.ts';
+import { emailValidator, noneValidator } from './validator.ts';
 
 export default function LoginForm({ onClose, setLoading }: FormsProps) {
   const [email, setEmail] = useState<string>('');
@@ -58,17 +58,16 @@ export default function LoginForm({ onClose, setLoading }: FormsProps) {
         </IconButton>
       </div>
       <ValidatedTextField
-        label="Email"
+        label={'Email'}
         validator={emailValidator}
         onChange={(isValid) => (formValid.current.email = isValid)}
-        value={email}
         setValue={setEmail}
       />
-      <PasswordInput
-        setPassword={(value) => {
-          setPassword(value);
-          formValid.current.password = !passwordValidator(value);
-        }}
+      <ValidatedPassword
+        label={'Password'}
+        validator={noneValidator}
+        onChange={(isValid) => (formValid.current.password = isValid)}
+        setValue={setPassword}
       />
       <Button variant="contained" onClick={handleSubmit}>
         Log In
