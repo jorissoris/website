@@ -1,5 +1,4 @@
-import { SyntheticEvent } from 'react';
-import { SnackbarCloseReason } from '@mui/material';
+import { Dispatch, SetStateAction } from 'react';
 
 export interface User {
   id: number;
@@ -9,27 +8,25 @@ export interface User {
   password_hash: string;
 }
 
-export interface AlertType {
-  title: string;
-  text: string;
-  severity?: 'success' | 'info' | 'warning' | 'error';
-}
-
 export interface AuthContextType {
-  authCookie: { [x: string]: any };
-  login: (data: { token: string }) => void;
+  isLoggedIn: boolean;
+  checkAuth: () => void;
   logout: () => void;
-  checkAuth: () => boolean;
 }
 
 export interface ThemeContextType {
-  themeCookie: { [x: string]: any };
+  themeCookie: { [x: string]: boolean };
   toggleTheme: () => void;
 }
 
-export interface AlertContextType {
-  open: boolean;
-  alert: AlertType | undefined;
-  changeAlert: (alert: AlertType) => void;
-  handleClose: (_event?: SyntheticEvent | Event, reason?: SnackbarCloseReason) => void;
+export interface FormsProps {
+  onClose: () => void;
+  setLoading: Dispatch<SetStateAction<boolean>>;
+}
+
+export interface ValidateProps {
+  label: string;
+  validator: (value: string) => string | false;
+  onChange: (isValid: boolean) => void;
+  setValue: Dispatch<SetStateAction<string>>;
 }

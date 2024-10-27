@@ -3,9 +3,15 @@ import { useState } from 'react';
 import SignupForm from './SignupForm.tsx';
 import LoginForm from './LoginForm.tsx';
 
-export default function AuthDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+interface AuthDialogProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+export default function AuthDialog({ open, onClose }: AuthDialogProps) {
   const [login, setLogin] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
       <DialogContent>
@@ -17,7 +23,7 @@ export default function AuthDialog({ open, onClose }: { open: boolean; onClose: 
         <p>
           {login ? (
             <>
-              Don't have an account yet?{' '}
+              Don&#39;t have an account yet?{' '}
               <Link
                 onClick={() => {
                   setLogin(false);

@@ -1,31 +1,28 @@
-import {Dispatch, SetStateAction, useState} from 'react';
-import {Button, IconButton, TextField} from '@mui/material';
-import {Close} from '@mui/icons-material';
-import {useAuth} from '../providers/AuthProvider.tsx';
-import {useAlert} from '../providers/AlertProvider.tsx';
-import PasswordInput from './PasswordInput.tsx';
+import { useRef, useState } from 'react';
+import { Button, IconButton } from '@mui/material';
+import { Close } from '@mui/icons-material';
+import ValidatedPassword from './ValidatedPassword.tsx';
+import { FormsProps } from '../types';
+import { enqueueSnackbar } from 'notistack';
+import ValidatedTextField from './ValidatedTextField';
+import { emailValidator, nameValidator, passwordValidator } from './validator.ts';
 
-export default function SignupForm({
-                                     onClose,
-                                     setLoading
-                                   }: {
-  onClose: () => void;
-  setLoading: Dispatch<SetStateAction<boolean>>;
-}) {
-  const {login} = useAuth();
-  const {changeAlert} = useAlert();
+export default function SignupForm({ onClose, setLoading }: FormsProps) {
   const [email, setEmail] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
+  const formValid = useRef({
+    email: false,
+    firstName: false,
+    lastName: false,
+    password: false
+  });
+
   const handleSubmit = async () => {
-    if (email === '' || firstName === '' || lastName === '' || password === '') {
-      changeAlert({
-        title: 'Invalid credentials',
-        text: 'Please fill in everything.',
-        severity: 'error'
-      });
+    if (Object.values(formValid.current).some((isValid) => !isValid)) {
+      enqueueSnackbar('Please fill in all fields correctly.', { variant: 'error' });
       return;
     }
 
@@ -33,95 +30,65 @@ export default function SignupForm({
       setLoading(true);
       const response = await fetch('/api/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: email,
-          firstName: firstName,
-          lastName: lastName,
-          password: password
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, firstName, lastName, password })
       });
+
       switch (response.status) {
         case 201: {
-          const token: string = await response.json();
-          login({token});
+          await response.json();
           onClose();
-          changeAlert({
-            title: 'Success',
-            text: 'Created account: ' + firstName + ' ' + lastName,
-            severity: 'success'
-          });
+          enqueueSnackbar(`Created account: ${firstName} ${lastName}`, { variant: 'success' });
           break;
         }
-        case 403:
-          changeAlert({
-            title: "Couldn't create account",
-            text: 'Try using a different username.',
-            severity: 'error'
-          });
-          break;
-        case 500:
-          changeAlert({
-            title: 'Internal Server Error',
-            text: 'Something went wrong. Please try again later.',
-            severity: 'error'
-          });
+        case 409:
+          enqueueSnackbar('Email is already in use.', { variant: 'error' });
           break;
         default:
-          changeAlert({
-            title: 'Error',
-            text: 'Something went wrong. Please try again later.',
-            severity: 'error'
-          });
+          enqueueSnackbar('Something went wrong. Please try again later.', { variant: 'error' });
       }
     } catch (error) {
-      changeAlert({
-        title: 'Error: ' + error,
-        text: 'Are you connected to the internet?',
-        severity: 'error'
-      });
+      enqueueSnackbar(String(error), { variant: 'error' });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <>
-      <div className="grid grid-cols-1 grid-flow-row gap-2">
-        <div className="flex justify-between">
-          <p className="text-2xl">Sign Up</p>
-          <IconButton onClick={onClose}>
-            <Close/>
-          </IconButton>
-        </div>
-        <TextField
-          id="email"
-          label="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full"
-        />
-        <TextField
-          id="firstName"
-          label="First Name"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          className="w-full"
-        />
-        <TextField
-          id="lastName"
-          label="Last Name"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          className="w-full"
-        />
-        <PasswordInput setPassword={setPassword}/>
-        <Button variant="contained" onClick={handleSubmit}>
-          Sign Up
-        </Button>
+    <div className="grid grid-cols-1 grid-flow-row gap-2">
+      <div className="flex justify-between">
+        <p className="text-2xl">Sign Up</p>
+        <IconButton onClick={onClose}>
+          <Close />
+        </IconButton>
       </div>
-    </>
+      <ValidatedTextField
+        label={'Email'}
+        validator={emailValidator}
+        onChange={(isValid) => (formValid.current.email = isValid)}
+        setValue={setEmail}
+      />
+      <ValidatedTextField
+        label={'First Name'}
+        validator={nameValidator}
+        onChange={(isValid) => (formValid.current.firstName = isValid)}
+        setValue={setFirstName}
+      />
+      <ValidatedTextField
+        label={'Last Name'}
+        validator={nameValidator}
+        onChange={(isValid) => (formValid.current.lastName = isValid)}
+        setValue={setLastName}
+      />
+      <ValidatedPassword
+        label={'Password'}
+        validator={passwordValidator}
+        onChange={(isValid) => (formValid.current.password = isValid)}
+        setValue={setPassword}
+      />
+      <Button variant="contained" onClick={handleSubmit}>
+        Sign Up
+      </Button>
+    </div>
   );
 }

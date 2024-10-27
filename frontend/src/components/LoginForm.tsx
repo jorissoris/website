@@ -1,28 +1,22 @@
-import {Dispatch, SetStateAction, useState} from 'react';
-import {Button, IconButton, TextField} from '@mui/material';
-import {Close} from '@mui/icons-material';
-import {useAuth} from '../providers/AuthProvider.tsx';
-import {useAlert} from '../providers/AlertProvider.tsx';
-import PasswordInput from './PasswordInput.tsx';
+import { useState, useRef } from 'react';
+import { Button, IconButton } from '@mui/material';
+import { Close } from '@mui/icons-material';
+import ValidatedPassword from './ValidatedPassword.tsx';
+import { FormsProps } from '../types';
+import { enqueueSnackbar } from 'notistack';
+import ValidatedTextField from './ValidatedTextField';
+import { emailValidator, noneValidator } from './validator.ts';
 
-export default function LoginForm({
-                                    onClose,
-                                    setLoading
-                                  }: {
-  onClose: () => void;
-  setLoading: Dispatch<SetStateAction<boolean>>;
-}) {
-  const {login} = useAuth();
-  const {changeAlert} = useAlert();
-  const [email, setUsername] = useState<string>('');
+export default function LoginForm({ onClose, setLoading }: FormsProps) {
+  const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
+  const formValid = useRef({ email: false, password: false });
+
   const handleSubmit = async () => {
-    if (email === '' || password === '') {
-      changeAlert({
-        title: 'Invalid credentials',
-        text: 'Please fill in email and password.',
-        severity: 'error'
+    if (Object.values(formValid.current).some((isValid) => !isValid)) {
+      enqueueSnackbar('Please enter valid email and password.', {
+        variant: 'error'
       });
       return;
     }
@@ -31,79 +25,53 @@ export default function LoginForm({
       setLoading(true);
       const response = await fetch('/api/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
       });
+
       switch (response.status) {
-        case 200: {
-          const token: string = await response.json();
-          login({token});
+        case 200:
           onClose();
-          changeAlert({
-            title: 'Success',
-            text: 'You logged in.',
-            severity: 'success'
-          });
+          enqueueSnackbar('You logged in.', { variant: 'success' });
           break;
-        }
         case 401:
-          changeAlert({
-            title: 'Incorrect username or password',
-            text: 'Did you spell everything correctly?',
-            severity: 'error'
-          });
-          break;
-        case 500:
-          changeAlert({
-            title: 'Internal Server Error',
-            text: 'Something went wrong. Please try again later.',
-            severity: 'error'
-          });
+          enqueueSnackbar('Incorrect email or password.', { variant: 'error' });
           break;
         default:
-          changeAlert({
-            title: 'Error',
-            text: 'Something went wrong. Please try again later.',
-            severity: 'error'
+          enqueueSnackbar('Something went wrong. Please try again later.', {
+            variant: 'error'
           });
       }
     } catch (error) {
-      changeAlert({
-        title: 'Error: ' + error,
-        text: 'Are you connected to the internet?',
-        severity: 'error'
-      });
+      enqueueSnackbar(String(error), { variant: 'error' });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <>
-      <div className="grid grid-cols-1 grid-flow-row gap-2">
-        <div className="flex justify-between">
-          <p className="text-2xl">Log In</p>
-          <IconButton onClick={onClose}>
-            <Close/>
-          </IconButton>
-        </div>
-        <TextField
-          fullWidth
-          id="email"
-          label="Email"
-          value={email}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <PasswordInput setPassword={setPassword}/>
-        <Button variant="contained" onClick={handleSubmit}>
-          Log In
-        </Button>
+    <div className="grid grid-cols-1 grid-flow-row gap-2">
+      <div className="flex justify-between">
+        <p className="text-2xl">Log In</p>
+        <IconButton onClick={onClose}>
+          <Close />
+        </IconButton>
       </div>
-    </>
+      <ValidatedTextField
+        label={'Email'}
+        validator={emailValidator}
+        onChange={(isValid) => (formValid.current.email = isValid)}
+        setValue={setEmail}
+      />
+      <ValidatedPassword
+        label={'Password'}
+        validator={noneValidator}
+        onChange={(isValid) => (formValid.current.password = isValid)}
+        setValue={setPassword}
+      />
+      <Button variant="contained" onClick={handleSubmit}>
+        Log In
+      </Button>
+    </div>
   );
 }

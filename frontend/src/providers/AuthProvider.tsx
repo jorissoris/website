@@ -1,33 +1,62 @@
-import { createContext, useContext, useMemo, ReactNode } from 'react';
+import { createContext, useContext, useMemo, ReactNode, useState } from 'react';
 import { AuthContextType } from '../types.ts';
-import { useCookies } from 'react-cookie';
+import { enqueueSnackbar } from 'notistack';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export default function AuthProvider({ children }: { children: ReactNode }) {
-  const [authCookie, setCookie, removeCookie] = useCookies(['token']);
-  const login = ({ token }: { token: string }) => {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    setCookie('token', token, { expires: tomorrow, secure: true, sameSite: 'strict' });
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export default function AuthProvider({ children }: AuthProviderProps) {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const checkAuth = async () => {
+    try {
+      const response = await fetch('/api/whoami', {
+        method: 'GET',
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    } catch (error) {
+      enqueueSnackbar(String(error), {
+        variant: 'error'
+      });
+      setIsLoggedIn(false);
+    }
   };
 
-  const logout = () => {
-    removeCookie('token');
-  };
+  const logout = async () => {
+    try {
+      const response = await fetch('/api/logout', {
+        method: 'GET',
+        credentials: 'include'
+      });
 
-  const checkAuth = () => {
-    return authCookie.token != undefined;
+      if (response.ok) {
+        setIsLoggedIn(false);
+        enqueueSnackbar('You logged out.', {
+          variant: 'success'
+        });
+      }
+    } catch (error) {
+      enqueueSnackbar(String(error), {
+        variant: 'error'
+      });
+    }
   };
 
   const value = useMemo(
     () => ({
-      authCookie,
-      login,
-      logout,
-      checkAuth
+      isLoggedIn,
+      checkAuth,
+      logout
     }),
-    [authCookie]
+    [isLoggedIn]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
