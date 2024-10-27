@@ -25,18 +25,17 @@ export default function UserMenu() {
           className="ml-2"
           aria-controls={open ? 'account-menu' : undefined}
           aria-haspopup="true"
-          aria-expanded={open ? 'true' : undefined}
-        >
+          aria-expanded={open ? 'true' : undefined}>
           <Avatar className="w-8 h-8">{user?.firstName.charAt(0)}</Avatar>
         </IconButton>
       </Tooltip>
       <Menu
         anchorEl={anchorEl}
+        id="account-menu"
         open={open}
         onClose={handleClose}
         onClick={handleClose}
-        className="shadow "
-      >
+        className="shadow ">
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <AccountCircleIcon />

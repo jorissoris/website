@@ -1,4 +1,4 @@
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useThemeMode } from './providers/ThemeProvider.tsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -24,7 +24,10 @@ export default function App() {
 
   const darkTheme = createTheme({
     palette: {
-      mode: themeCookie.theme ? 'dark' : 'light'
+      mode: themeCookie.theme ? 'dark' : 'light',
+      secondary: {
+        main: themeCookie.theme ? '#1A1A19' : '#133E87'
+      }
     },
     components: {
       MuiButton: {
