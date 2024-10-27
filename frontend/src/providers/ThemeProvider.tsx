@@ -4,7 +4,11 @@ import { useCookies } from 'react-cookie';
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export default function ThemeProvider({ children }: { children: ReactNode }) {
+interface ThemeProviderProps {
+  children: ReactNode;
+}
+
+export default function ThemeProvider({ children }: ThemeProviderProps) {
   const [themeCookie, setCookie] = useCookies(['theme']);
 
   const toggleTheme = () => {

@@ -4,7 +4,11 @@ import { enqueueSnackbar } from 'notistack';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export default function AuthProvider({ children }: { children: ReactNode }) {
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export default function AuthProvider({ children }: AuthProviderProps) {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const checkAuth = async () => {
     try {
@@ -19,6 +23,9 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         setIsLoggedIn(false);
       }
     } catch (error) {
+      enqueueSnackbar(String(error), {
+        variant: 'error'
+      });
       setIsLoggedIn(false);
     }
   };
@@ -33,14 +40,12 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       if (response.ok) {
         setIsLoggedIn(false);
         enqueueSnackbar('You logged out.', {
-          variant: 'success',
-          title: 'Success'
+          variant: 'success'
         });
       }
     } catch (error) {
-      enqueueSnackbar('Are you connected to the internet?', {
-        variant: 'error',
-        title: 'Error: ' + error
+      enqueueSnackbar(String(error), {
+        variant: 'error'
       });
     }
   };

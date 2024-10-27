@@ -20,27 +20,18 @@ export default function Home() {
       case 200: {
         const body = await response.json();
         enqueueSnackbar('Your email is: ' + body.email, {
-          variant: 'success',
-          title: 'It works!'
+          variant: 'success'
         });
         break;
       }
       case 401:
         enqueueSnackbar('Please log in and try again.', {
-          variant: 'error',
-          title: 'Unauthorized user'
-        });
-        break;
-      case 500:
-        enqueueSnackbar('Something went wrong. Please try again later.', {
-          variant: 'error',
-          title: 'Internal Server Error'
+          variant: 'error'
         });
         break;
       default:
         enqueueSnackbar('Something went wrong. Please try again later.', {
-          variant: 'error',
-          title: 'Error'
+          variant: 'error'
         });
     }
   };

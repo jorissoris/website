@@ -7,28 +7,13 @@ export default function AuthDialog({ open, onClose }: { open: boolean; onClose: 
   const [login, setLogin] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleLoadingTrue = () => {
-    setLoading(true);
-  };
-  const handleLoadingFalse = () => {
-    setLoading(false);
-  };
-
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
       <DialogContent>
         {login ? (
-          <LoginForm
-            onClose={onClose}
-            handleLoadingTrue={handleLoadingTrue}
-            handleLoadingFalse={handleLoadingFalse}
-          />
+          <LoginForm onClose={onClose} setLoading={setLoading} />
         ) : (
-          <SignupForm
-            onClose={onClose}
-            handleLoadingTrue={handleLoadingTrue}
-            handleLoadingFalse={handleLoadingFalse}
-          />
+          <SignupForm onClose={onClose} setLoading={setLoading} />
         )}
         <p>
           {login ? (
@@ -37,8 +22,7 @@ export default function AuthDialog({ open, onClose }: { open: boolean; onClose: 
               <Link
                 onClick={() => {
                   setLogin(false);
-                }}
-              >
+                }}>
                 Sign up
               </Link>
             </>
@@ -48,8 +32,7 @@ export default function AuthDialog({ open, onClose }: { open: boolean; onClose: 
               <Link
                 onClick={() => {
                   setLogin(true);
-                }}
-              >
+                }}>
                 log in
               </Link>{' '}
               instead.

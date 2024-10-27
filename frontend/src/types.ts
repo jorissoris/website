@@ -1,4 +1,4 @@
-import { CustomContentProps } from 'notistack';
+import { Dispatch, SetStateAction } from 'react';
 
 export interface User {
   id: number;
@@ -8,10 +8,6 @@ export interface User {
   password_hash: string;
 }
 
-export interface AlertProps extends CustomContentProps {
-  title?: string;
-}
-
 export interface AuthContextType {
   isLoggedIn: boolean;
   checkAuth: () => void;
@@ -19,12 +15,11 @@ export interface AuthContextType {
 }
 
 export interface ThemeContextType {
-  themeCookie: { [x: string]: never };
+  themeCookie: { [x: string]: unknown };
   toggleTheme: () => void;
 }
 
-export interface Forms {
+export interface FormsProps {
   onClose: () => void;
-  handleLoadingTrue: () => void;
-  handleLoadingFalse: () => void;
+  setLoading: Dispatch<SetStateAction<boolean>>;
 }

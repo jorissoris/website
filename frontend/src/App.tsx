@@ -7,6 +7,8 @@ import Home from './pages/Home.tsx';
 import { SnackbarProvider } from 'notistack';
 import Success from './alerts/Success.tsx';
 import Error from './alerts/Error.tsx';
+import Warning from './alerts/Warning.tsx';
+import Info from './alerts/Info.tsx';
 
 const router = createBrowserRouter([
   {
@@ -31,11 +33,13 @@ export default function App() {
       <RouterProvider router={router} />
       <SnackbarProvider
         maxSnack={3}
-        autoHideDuration={3000}
+        autoHideDuration={5000}
         preventDuplicate
         Components={{
           success: Success,
-          error: Error
+          error: Error,
+          warning: Warning,
+          info: Info
         }}
       />
     </ThemeProvider>
