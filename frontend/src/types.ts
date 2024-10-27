@@ -9,6 +9,7 @@ export interface User {
 }
 
 export interface AuthContextType {
+  user: UserType | undefined;
   isLoggedIn: boolean;
   checkAuth: () => void;
   logout: () => void;
@@ -29,4 +30,15 @@ export interface ValidateProps {
   validator: (value: string) => string | false;
   onChange: (isValid: boolean) => void;
   setValue: Dispatch<SetStateAction<string>>;
+}
+
+export interface UserType {
+  id: string;
+  created: string;
+  updated: string;
+  firstName: string;
+  lastName: string;
+  roles: string[];
+  status: string;
+  email: string;
 }
