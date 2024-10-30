@@ -24,14 +24,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: cargo fmt --all -- --check
+      - run: cd backend && cargo fmt --all -- --check
 
   # no cache needed for cargo outdated
   outdatedBackend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: cargo outdated --exit-code 1
+      - run: cd backend && cargo outdated --exit-code 1
 
   buildBackend:
     runs-on: ubuntu-latest
@@ -41,7 +41,7 @@ jobs:
         with:
           prefix-key: cargo
           shared-key: build
-      - run: cargo build --all-features --all-targets --release
+      - run: cd backend && cargo build --all-features --all-targets --release
 
   clippy:
     runs-on: ubuntu-latest
@@ -51,7 +51,7 @@ jobs:
         with:
           prefix-key: cargo
           shared-key: check
-      - run: cargo clippy --all-features --all-targets -- --deny clippy::all
+      - run: cd backend && cargo clippy --all-features --all-targets -- --deny clippy::all
 
   #  # we do not have any tests at this moment
   #  test:
@@ -67,15 +67,13 @@ jobs:
   unused-dependenciesBackend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: nightly
           override: true
-      - uses: aig787/cargo-udeps-action@v1
-        with:
-          version: 'latest'
-          args: '--all-targets'
+      - run: cd backend && cargo udeps --all-targets
+
 
   # Frontend
 
@@ -87,7 +85,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '20'
-      - run: npm install
+      - run: cd frontend && npm install
       - run: cd frontend && npx prettier --check "src/**/*.{js,jsx,ts,tsx,css,scss,html}"
 
   # Lint code with ESLint
@@ -98,7 +96,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '20'
-      - run: npm install
+      - run: cd frontend && npm install
       - run: cd frontend && npx eslint "src/**/*.{js,jsx,ts,tsx}"
 
   outdatedFrontend:
@@ -118,7 +116,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '20'
-      - run: npm install
+      - run: cd frontend && npm install
       - run: cd frontend && npm run build
 
   #    # we do not have any tests at this moment
@@ -140,5 +138,5 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '20'
-      - run: npm install -g depcheck
+      - run: cd frontend && npm install -g depcheck
       - run: cd frontend && depcheck
