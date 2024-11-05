@@ -24,9 +24,23 @@ export default function App() {
 
   const darkTheme = createTheme({
     palette: {
-      mode: themeCookie.theme ? 'dark' : 'light',
-      secondary: {
-        main: themeCookie.theme ? '#1A1A19' : '#133E87'
+      mode: themeCookie.theme ? 'dark' : 'light'
+    },
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: 35,
+            padding: '0.5rem 1rem'
+          }
+        }
+      },
+      MuiTextField: {
+        styleOverrides: {
+          root: {
+            borderRadius: 35
+          }
+        }
       }
     },
     components: {

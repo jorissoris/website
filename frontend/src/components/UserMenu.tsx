@@ -31,7 +31,6 @@ export default function UserMenu() {
       </Tooltip>
       <Menu
         anchorEl={anchorEl}
-        id="account-menu"
         open={open}
         onClose={handleClose}
         onClick={handleClose}
