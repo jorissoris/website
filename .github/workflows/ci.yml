@@ -51,7 +51,7 @@ jobs:
           prefix-key: cargo
           shared-key: check
       - run: docker compose up -d
-      - run: cd backend && cargo clippy --all-features --all-targets -- --deny clippy::all
+      - run: cd backend && cargo clean && cargo clippy --all-features --all-targets -- --deny clippy::all
 
   #  # we do not have any tests at this moment
   #  test:
