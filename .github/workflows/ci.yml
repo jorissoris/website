@@ -67,6 +67,7 @@ jobs:
         with:
           toolchain: nightly
           override: true
+      - run: cd backend && cargo install cargo-udeps --locked
       - run: cd backend && cargo udeps --all-targets
 
   # Frontend
