@@ -21,7 +21,7 @@ jobs:
   buildDB:
     runs-on: ubuntu-latest
     steps:
-      - run: docker compose up db -d
+      - run: docker compose -f docker-compose.yml up db -d
 
   # Backend
   formatBackend:
