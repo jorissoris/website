@@ -38,6 +38,7 @@ jobs:
           cargo sqlx migrate run --source migrations
 
       - name: cargo build
+        working-directory: backend
         run: cargo build ${{ matrix.features }}
 
       - name: cargo test
@@ -81,7 +82,7 @@ jobs:
         run: cargo udeps --workspace --all-targets
 
   format-backend:
-    name: Format
+    name: Format Rust
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -165,6 +166,7 @@ jobs:
           node-version: '20'
       - working-directory: frontend
         run: |
+          npm install
           npm outdated
           npm install -g depcheck
-          depcheck
+          depcheck --ignores=eslint-config-react-app
