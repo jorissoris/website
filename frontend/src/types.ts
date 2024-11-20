@@ -26,7 +26,9 @@ export interface FormsProps {
 
 export interface ValidateProps {
   label: string;
+  // eslint-disable-next-line no-unused-vars
   validator: (value: string) => string | false;
+  // eslint-disable-next-line no-unused-vars
   onChange: (isValid: boolean) => void;
   setValue: Dispatch<SetStateAction<string>>;
 }

@@ -39,7 +39,8 @@ export default function ValidatedPassword({ label, validator, onChange, setValue
             <IconButton
               onClick={handleClickShowPassword}
               onMouseDown={handleMouseDownPassword}
-              edge="end">
+              edge="end"
+            >
               {showPassword ? <VisibilityOff /> : <Visibility />}
             </IconButton>
           </InputAdornment>

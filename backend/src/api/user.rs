@@ -1,13 +1,19 @@
-use crate::api::{ApiResult, ValidatedJson, ValidatedQuery};
-use crate::auth::role::{MembershipStatus, Role};
-use crate::auth::session::Session;
-use crate::data_source::UserStore;
-use crate::error::{AppResult, Error};
-use crate::user::{RegisterNewUser, User, UserContent, UserId};
-use crate::Pagination;
-use axum::extract::Path;
-use axum::http::{HeaderMap, StatusCode};
-use axum::Json;
+use crate::{
+    api::{ApiResult, ValidatedJson, ValidatedQuery},
+    auth::{
+        role::{MembershipStatus, Role},
+        session::Session,
+    },
+    data_source::UserStore,
+    error::{AppResult, Error},
+    user::{RegisterNewUser, User, UserContent, UserId},
+    Pagination,
+};
+use axum::{
+    extract::Path,
+    http::{HeaderMap, StatusCode},
+    Json,
+};
 
 fn read_access(id: &UserId, session: &Session) -> AppResult<()> {
     if read_all_access(session).is_ok() || id == session.user_id() {

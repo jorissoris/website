@@ -1,14 +1,15 @@
-use crate::auth::role::MembershipStatus;
-use crate::data_source::Count;
-use crate::error::{AppResult, Error};
-use crate::wire::user::{User, UserContent, UserId};
-use crate::{AppState, Pagination};
-use argon2::password_hash::rand_core::OsRng;
-use argon2::password_hash::SaltString;
-use argon2::{Argon2, PasswordHasher};
-use axum::async_trait;
-use axum::extract::FromRequestParts;
-use axum::http::request::Parts;
+use crate::{
+    auth::role::MembershipStatus,
+    data_source::Count,
+    error::{AppResult, Error},
+    wire::user::{User, UserContent, UserId},
+    AppState, Pagination,
+};
+use argon2::{
+    password_hash::{rand_core::OsRng, SaltString},
+    Argon2, PasswordHasher,
+};
+use axum::{async_trait, extract::FromRequestParts, http::request::Parts};
 use sqlx::PgPool;
 use std::ops::Deref;
 use time::OffsetDateTime;
