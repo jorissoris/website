@@ -16,6 +16,7 @@ export const passwordValidator = (value: string): string | false => {
   return false;
 };
 
+// eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
 export const noneValidator = (_value: string): string | false => {
   return false;
 };
