@@ -10,6 +10,7 @@ on:
 jobs:
   build-backend:
     name: Build and test backend
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -30,10 +31,11 @@ jobs:
         uses: Swatinem/rust-cache@82a92a6e8fbeee089604da2575dc567ae9ddeaab # v2.7.5
 
       - name: Setup Postgres DB
+        working-directory: backend
         run: |
           docker compose up db --wait && \
           cargo install sqlx-cli --no-default-features --features rustls,postgres && \
-          cargo sqlx migrate run --source backend/migrations
+          cargo sqlx migrate run --source migrations
 
       - name: cargo build
         run: cargo build ${{ matrix.features }}
@@ -93,6 +95,7 @@ jobs:
           components: rustfmt
 
       - name: Check formatting
+        working-directory: backend
         run: cargo +nightly fmt --all --check -- --config imports_granularity="Crate"
 
   clippy:
@@ -128,9 +131,8 @@ jobs:
           persist-credentials: false
 
       - uses: EmbarkStudios/cargo-deny-action@8371184bd11e21dcf8ac82ebf8c9c9f74ebf7268
-        working-directory: backend
         with:
-          arguments: --workspace --all-features
+          arguments: --workspace --all-features --manifest-path backend/Cargo.toml
 
   # Frontend
   lint-frontend:
