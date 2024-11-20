@@ -39,11 +39,11 @@ jobs:
 
       - name: cargo build
         working-directory: backend
-        run: cargo build ${{ matrix.features }}
+        run: cargo build
 
       - name: cargo test
         working-directory: backend
-        run: cargo llvm-cov --target ${{matrix.target}} ${{ matrix.features }} --lcov --output-path lcov.info
+        run: cargo llvm-cov --lcov --output-path lcov.info
         env:
           RUST_BACKTRACE: 1
 

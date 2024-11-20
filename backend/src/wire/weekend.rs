@@ -66,6 +66,7 @@ fn validate_weekend(weekend: &WeekendContent) -> Result<(), ValidationError> {
 
 #[derive(Serialize, Debug, Validate)]
 #[serde(rename_all = "camelCase")]
+#[allow(dead_code)]
 pub(crate) struct WeekendContentHydrated {
     pub start: Date,
     pub end: Date,
