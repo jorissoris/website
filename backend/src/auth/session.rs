@@ -1,15 +1,16 @@
-use crate::auth::role::{MembershipStatus, Roles};
-use crate::auth::COOKIE_NAME;
-use crate::error::{AppResult, Error};
-use crate::user::UserId;
-use crate::wire::user::UserCredentials;
-use crate::AppState;
+use crate::{
+    auth::{
+        role::{MembershipStatus, Roles},
+        COOKIE_NAME,
+    },
+    error::{AppResult, Error},
+    user::UserId,
+    wire::user::UserCredentials,
+    AppState,
+};
 use argon2::{password_hash, Argon2, PasswordHash, PasswordVerifier};
-use axum::async_trait;
-use axum::extract::FromRequestParts;
-use axum::http::request::Parts;
-use axum_extra::extract::cookie::Cookie;
-use axum_extra::extract::CookieJar;
+use axum::{async_trait, extract::FromRequestParts, http::request::Parts};
+use axum_extra::extract::{cookie::Cookie, CookieJar};
 use rand::distributions::{Alphanumeric, DistString};
 use sqlx::PgPool;
 use time::OffsetDateTime;

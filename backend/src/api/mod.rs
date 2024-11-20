@@ -3,12 +3,16 @@ mod user;
 pub(crate) use user::*;
 
 use crate::error::Error;
-use axum::extract::rejection::{JsonRejection, QueryRejection};
-use axum::extract::{FromRequest, FromRequestParts, Query, Request};
-use axum::http::request::Parts;
-use axum::{async_trait, Json};
-use serde::de::DeserializeOwned;
-use serde::Deserialize;
+use axum::{
+    async_trait,
+    extract::{
+        rejection::{JsonRejection, QueryRejection},
+        FromRequest, FromRequestParts, Query, Request,
+    },
+    http::request::Parts,
+    Json,
+};
+use serde::{de::DeserializeOwned, Deserialize};
 use validator::Validate;
 
 type ApiResult<T> = Result<Json<T>, Error>;

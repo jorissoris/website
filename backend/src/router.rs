@@ -1,13 +1,16 @@
-use crate::api::{get_all_users, register, update_user, who_am_i};
-use crate::auth::{login, logout};
-use crate::get_user;
-use crate::state::AppState;
-use axum::extract::State;
-use axum::routing::{get, post};
-use axum::{Json, Router};
+use crate::{
+    api::{get_all_users, register, update_user, who_am_i},
+    auth::{login, logout},
+    get_user,
+    state::AppState,
+};
+use axum::{
+    extract::State,
+    routing::{get, post},
+    Json, Router,
+};
 use memory_serve::{load_assets, MemoryServe};
-use tower_http::trace;
-use tower_http::trace::TraceLayer;
+use tower_http::{trace, trace::TraceLayer};
 use tracing::Level;
 
 pub fn create_router(state: AppState) -> Router {

@@ -1,12 +1,7 @@
 use crate::error::{AppResult, Error};
-use axum::async_trait;
-use axum::extract::FromRequestParts;
-use axum::http::request::Parts;
-use sqlx::postgres::PgPoolOptions;
-use sqlx::PgPool;
-use std::env;
-use std::ops::Deref;
-use std::sync::Arc;
+use axum::{async_trait, extract::FromRequestParts, http::request::Parts};
+use sqlx::{postgres::PgPoolOptions, PgPool};
+use std::{env, ops::Deref, sync::Arc};
 
 pub struct Config {
     database_url: String,

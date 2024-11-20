@@ -1,10 +1,8 @@
-use crate::api::ValidatedJson;
-use crate::auth::session::Session;
-use crate::error::Error;
-use crate::wire::user::UserCredentials;
+use crate::{
+    api::ValidatedJson, auth::session::Session, error::Error, wire::user::UserCredentials,
+};
 use axum::response::IntoResponse;
-use axum_extra::extract::cookie::Cookie;
-use axum_extra::extract::CookieJar;
+use axum_extra::extract::{cookie::Cookie, CookieJar};
 use sqlx::PgPool;
 
 pub(crate) mod role;

@@ -1,8 +1,6 @@
-use crate::user::{BasicUser, User};
+use crate::user::BasicUser;
 use serde::{Deserialize, Serialize};
-use std::borrow::Cow;
-use std::fmt::Debug;
-use std::ops::Deref;
+use std::{borrow::Cow, fmt::Debug, ops::Deref};
 use time::{Date, OffsetDateTime};
 use uuid::Uuid;
 use validator::{Validate, ValidationError};
