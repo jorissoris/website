@@ -1,4 +1,6 @@
-import { useState, MouseEvent } from 'react';
+import './MainMenu.css';
+
+import { useState, MouseEvent, useEffect } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -54,9 +56,20 @@ export default function MainMenu() {
     setOpenMenu(undefined);
   };
 
+
+  const [offset, setOffset] = useState(window.scrollY);
+
+  useEffect(() => {
+      const onScroll = () => setOffset(window.scrollY);
+      // clean up code
+      window.removeEventListener('scroll', onScroll);
+      window.addEventListener('scroll', onScroll, { passive: true });
+      return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
     <>
-      <AppBar position="fixed">
+      <AppBar position="fixed" classes={{root: (offset === 0 ? 'MainMenu-transparent' : 'MainMenu-opaque') + ' MainMenu'}}>
         <Toolbar className="flex justify-between w-1/2 m-auto">
           {/* Menu Items */}
           <div className="flex items-center">

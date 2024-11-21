@@ -1,0 +1,9 @@
+.ContentCard {
+    width: 100%;
+    border-radius: 0.25rem;
+    padding: 30px;
+    background-color: white;
+    border-bottom-color: brown;
+    border-bottom-style: solid;
+    border-bottom-width: 2px
+}

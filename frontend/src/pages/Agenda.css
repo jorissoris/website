@@ -1,0 +1,19 @@
+.Agenda {
+    height: 2000px;
+
+    .Agenda-settings {
+        display: grid;
+        grid-template-columns: 0.66fr 0.33fr;
+        grid-template-rows: 1fr;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .Agenda-content {
+        display: grid;
+        grid-template-columns: 0.66fr 0.33fr;
+        grid-template-rows: 1fr;
+        gap: 20px;
+        margin-top: 20px;
+    }
+}
