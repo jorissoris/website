@@ -3,6 +3,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import ErrorPage from './pages/ErrorPage.tsx';
 import Home from './pages/Home.tsx';
 import Agenda from './pages/Agenda.tsx';
+import Event from './pages/Event.tsx';
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,11 @@ const router = createBrowserRouter([
   {
     path: '/agenda',
     element: <Agenda />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: '/agenda/:eventId',
+    element: <Event />,
     errorElement: <ErrorPage />
   },
   {

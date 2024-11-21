@@ -8,7 +8,6 @@ import Error from './alerts/Error.tsx';
 import Warning from './alerts/Warning.tsx';
 import Info from './alerts/Info.tsx';
 import MainMenu from './components/MainMenu.tsx';
-import GenericPage from './pages/GenericPage.tsx';
 
 import router from './router.tsx';
 
