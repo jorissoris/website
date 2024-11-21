@@ -1,9 +1,7 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useThemeMode } from './providers/ThemeProvider.tsx';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import ErrorPage from './pages/ErrorPage.tsx';
-import Home from './pages/Home.tsx';
+import { RouterProvider } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
 import Success from './alerts/Success.tsx';
 import Error from './alerts/Error.tsx';
@@ -11,13 +9,9 @@ import Warning from './alerts/Warning.tsx';
 import Info from './alerts/Info.tsx';
 import MainMenu from './components/MainMenu.tsx';
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Home />,
-    errorElement: <ErrorPage />
-  }
-]);
+import router from './router.tsx';
+
+
 
 export default function App() {
   const { themeCookie } = useThemeMode();

@@ -10,12 +10,15 @@ export default defineConfig({
         target: process?.env?.REMOTE_API ?? 'http://localhost:3000',
         changeOrigin: true
       }
+    },
+    watch: {
+      usePolling: true
     }
   },
   plugins: [react()],
   css: {
     postcss: {
       plugins: [tailwindcss()]
-    }
+    } 
   }
 });

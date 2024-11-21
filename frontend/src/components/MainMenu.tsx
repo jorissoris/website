@@ -19,6 +19,8 @@ import SignupForm from './SignupForm.tsx';
 import { useLanguage } from '../providers/LanguageProvider.tsx';
 import text from '../util.ts';
 
+import router from '../router.tsx';
+
 type MenuName = 'association' | 'climbing' | 'alps' | 'language' | undefined;
 
 export default function MainMenu() {
@@ -65,7 +67,7 @@ export default function MainMenu() {
               className="hover:opacity-50 hover:cursor-pointer h-24 mr-4"
               onClick={() => alert('Navigate to Home')}
             />
-            <Button color="inherit" onClick={() => alert('Navigate to Agenda')}>
+            <Button color="inherit" onClick={() => router.navigate('/agenda')}>
               {text('Agenda', 'Agenda')}
             </Button>
 
