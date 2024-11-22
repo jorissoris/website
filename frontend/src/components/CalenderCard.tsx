@@ -1,5 +1,6 @@
 import { dividerClasses } from '@mui/material';
 import './CalenderCard.css';
+import { useLanguage } from '../providers/LanguageProvider.tsx';
 
 import TextCard from './TextCard.tsx';
 
@@ -7,6 +8,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import Moment from 'react-moment';
 
 export default function CalenderCard(props: any) {
+    const localeCode = useLanguage().getLocaleCode();
 
     const registerButton = props.registerState == 'register' ? <div className="register-button">Register</div>
         : props.registerState == 'full' ? <div className="register-button full">Full</div>
@@ -14,12 +16,13 @@ export default function CalenderCard(props: any) {
         : <div></div>
     
 
+
     return <div className='CalenderCard'>
         <img className="CalenderCard-image" src={props.image}></img>
         <div className="CalenderCard-content">
-            <TextCard>{props.category}</TextCard>&nbsp;&nbsp;<TextCard>{props.datetimes}</TextCard>
-            <h2>{props.title}</h2>
-            <p>{props.description}</p>
+            <TextCard>{props.category[localeCode]}</TextCard>&nbsp;&nbsp;<TextCard>{props.datetimes}</TextCard>
+            <h2>{props.title[localeCode]}</h2>
+            <p>{props.descriptionMarkdown[localeCode]}</p>
         </div>
         <div className="CalenderCard-bottom">
             {props.registerState != 'no-register' ? <div className="registrations"><GroupIcon /> {props.registrations}</div>: <div></div>}
