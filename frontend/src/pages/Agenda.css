@@ -30,6 +30,11 @@
                 border: 1px solid rgba(1, 1, 1, 0.1);
                 padding: 6px 5px;
             }
+
+            input,
+            select {
+                font-family: inherit;
+            }
         }
     }
 
