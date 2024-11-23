@@ -11,8 +11,6 @@ import MainMenu from './components/MainMenu.tsx';
 
 import router from './router.tsx';
 
-
-
 export default function App() {
   const { themeCookie } = useThemeMode();
 

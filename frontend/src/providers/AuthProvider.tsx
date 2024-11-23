@@ -10,7 +10,9 @@ interface AuthProviderProps {
 
 export default function AuthProvider({ children }: AuthProviderProps) {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
   const [user, setUser] = useState<UserType | undefined>(undefined);
+  
   const checkAuth = async () => {
     try {
       const response = await fetch('/api/whoami', {
@@ -54,23 +56,15 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const value = useMemo(
-    () => ({
-      user,
-      isLoggedIn,
-      checkAuth,
-      logout
-    }),
-    [isLoggedIn]
-  );
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, isLoggedIn, checkAuth, logout }}>{children}</AuthContext.Provider>;
 }
 
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
+
   if (!context) {
     throw new Error('useAuth must be used within a AuthProvider');
   }
+
   return context;
 };

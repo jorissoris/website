@@ -26,7 +26,7 @@ import router from '../router.tsx';
 type MenuName = 'association' | 'climbing' | 'alps' | 'language' | undefined;
 
 export default function MainMenu() {
-  const { isLoggedIn, checkAuth } = useAuth();
+  const { isLoggedIn, checkAuth, logout } = useAuth();
   const { setEnglish, setDutch } = useLanguage();
   const [loading, setLoading] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | undefined>(undefined);
@@ -44,8 +44,6 @@ export default function MainMenu() {
   const handleClose = () => {
     setAuthOpen(false);
   };
-
-  checkAuth();
 
   const handleMenuOpen = (event: MouseEvent<HTMLElement>, menu: MenuName) => {
     setAnchorEl(event.currentTarget);
@@ -179,14 +177,15 @@ export default function MainMenu() {
               <UserMenu />
             ) : (
               <>
-                {/* Login */}
-                <Button color="inherit" onClick={handleLoginOpen}>
-                  {text('Login', 'Inloggen')}
-                </Button>
-                {/* Become a Member */}
-                <Button variant="contained" onClick={handleSignupOpen}>
+                {/* Login+Become Member / Logout */}
+                {!isLoggedIn ? <><Button color="inherit" onClick={handleLoginOpen}>
+                  {text('Login', 'Inloggen')}</Button>
+                  <Button variant="contained" onClick={handleSignupOpen}>
                   {text('Become a member', 'Lid worden')}
-                </Button>
+                </Button></>
+                : <Button color="inherit" onClick={logout}>
+                  {text('Logout', 'Uitloggen')}
+                </Button>}
               </>
             )}
           </div>
