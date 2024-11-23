@@ -15,6 +15,10 @@ import moment from 'moment';
 
 import Markdown from 'react-markdown'
 
+import DataTable, { createTheme } from 'react-data-table-component';
+
+import { useThemeMode } from '../providers/ThemeProvider.tsx';
+
 export default function Event() {
     const exampleAPIResponse: any = {
         id: 1,
@@ -37,6 +41,13 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ultricies q
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ultricies quis odio vel fringilla. Cras laoreet facilisis quam. Nunc at urna in enim semper laoreet. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Aliquam commodo nisl vitae lectus ultricies congue. Sed sed eros non justo egestas semper. Vestibulum luctus augue in metus bibendum, a posuere tellus mollis. Sed sem nisi, vulputate sit amet elementum quis, bibendum nec mi.`,
  },
+        registrationsTable: [
+            {
+                id: 1,
+                name: 'John Doe',
+                email: 'xTl7T@example.com',
+            }
+        ]
     }
     const langCode = useLanguage().getLangCode();
     const localeCole = useLanguage().getLocaleCode();
@@ -53,6 +64,17 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ultricies q
         registrationClosingWarning = <p><b>{text("Registration closes at", "Aanmeldingen sluiten op")} {registrationCloseTime.toLocaleString(langCode)}</b></p>;
     }
 
+    const theme = useThemeMode().getThemeName();
+
+    createTheme("dark", {
+        background: {
+            default: "#121212"
+        },
+        divider: {
+            default: "rgba(255, 255, 255, 0.1)"
+        } 
+    }, "dark");
+
     return <GenericPage><div className="Event">
         <CalenderCard {...exampleAPIResponse}
             />
@@ -65,5 +87,30 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ultricies q
                 <div className="button"><EditIcon sx={{fontSize: '20px'}} />{text("Edit Event", "Bewerk activiteit")}</div>
             </div>
         </ContentCard>
-    </div></GenericPage>;
+    </div>
+    
+    <ContentCard>
+        <div className="Event-data">
+            <h1>{text("Participants", "Deelnemers")}</h1>
+            <div className="data-table-holder">
+            <DataTable
+                columns={[
+                    {
+                        name: text("Name", "Naam"),
+                        selector: row => row.name,
+                    },
+                    {
+                        name: text("Email", "Email"),
+                        selector: row => row.email,
+                    },
+                ]}
+                data={exampleAPIResponse.registrationsTable}
+                theme={theme}
+            />
+            </div>
+            
+        </div>
+    </ContentCard>
+
+    </GenericPage>;
 }

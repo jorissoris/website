@@ -17,6 +17,7 @@ export interface AuthContextType {
 
 export interface ThemeContextType {
   themeCookie: { [x: string]: boolean };
+  getThemeName: () => string;
   toggleTheme: () => void;
 }
 

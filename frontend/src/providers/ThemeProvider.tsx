@@ -14,15 +14,20 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
     setThemeCookie('theme', !themeCookie.theme, { secure: true, sameSite: 'strict' });
   };
 
+  const getThemeName = () => {
+    return themeCookie.theme ? 'dark' : 'light';
+  }
+
   const value = useMemo(
     () => ({
       themeCookie,
+      getThemeName,
       toggleTheme
     }),
     [themeCookie]
   );
 
-  document.querySelector('#root')!.setAttribute('data-theme', themeCookie.theme ? 'dark' : 'light');
+  document.querySelector('#root')!.setAttribute('data-theme', getThemeName());
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
