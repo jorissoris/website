@@ -94,24 +94,35 @@ export default function Agenda() {
                 <h2>{text("Filter", "Filteren")}</h2>
                 <div className="form-group">
                     <label>{text("Categories", "Categorieën")}</label>
-                    <select className="form-control" onChange={(e) => console.log(e.target.value)}>
+                    <select className="form-control" onChange={(e) => setSelectedCategory(e.target.value)}>
                         <option value="all">{text("All", "Alles")}</option>
                         {exampleAPIResponse.categories.map((category: any) => <option value={category.id} key={category.id}>{category[localeCode]}</option>)}
                     </select>
                 </div>
                 <div className="form-group">
                     <label>{text("From Date", "Vanaf")}</label>
-                    <input type="date" className="form-control"></input>
+                    <input type="date" className="form-control" onChange={e => {
+                        if (e.target.value && !isNaN(new Date(e.target.value).getTime())) {
+                            setFromDateTime(new Date(e.target.value))
+                        }
+                    }} value={fromDateTime.toISOString().split('T')[0]}></input>
                 </div>
                 <div className="form-group">
                     <label>{text("To Date", "Tot")}</label>
-                    <input type="date" className="form-control"></input>
+                    <input type="date" className="form-control" onChange={e => {
+                        if (e.target.value && !isNaN(new Date(e.target.value).getTime())) {
+                            setToDateTime(new Date(e.target.value))
+                        }
+                    }} value={toDateTime.toISOString().split('T')[0]}></input>
                 </div>
             </ContentCard>
         </div>
 
         <div className="Agenda-content">
-            {exampleAPIResponse.events.map((event: any) => <CalenderCard {...event} key={event.id} />)}
+            {exampleAPIResponse.events
+                .filter((e: any) => selectedCategory === 'all' || e.categoryId === selectedCategory)
+                .filter(e => e.startDateTime && new Date(e.endDateTime).getTime() >= fromDateTime.getTime() && new Date(e.startDateTime).getTime() <= toDateTime.getTime())
+                .map((event: any) => <CalenderCard {...event} key={event.id} />)}
         </div>
 
         <div className="Agenda-pagination">
