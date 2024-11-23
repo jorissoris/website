@@ -4,6 +4,8 @@ import GenericPage from './GenericPage.tsx';
 import ContentCard from '../components/ContentCard.tsx';
 import CalenderCard from '../components/CalenderCard.tsx';
 
+import text from '../util.ts';
+
 import { useLanguage } from '../providers/LanguageProvider.tsx';
 
 import { useState } from 'react';
@@ -36,32 +38,32 @@ export default function Agenda() {
                 categoryName: { 'en-US': 'Climbing Weekend', 'nl-NL': 'Klimweekend' },
                 descriptionMarkdown: { 'en-US': 'You must register to participate!', 'nl-NL': 'Je moet je registreren om mee te doen!' },
                 registrations: 12,
-                startDateTime: '2022-11-06T00:00:00.000Z',
-                endDateTime: '2022-11-07T00:00:00.000Z',
+                startDateTime: '2025-03-06T00:00:00.000Z',
+                endDateTime: '2025-03-08T00:00:00.000Z',
                 registerState: 'register'
             },
             {
                 id: 2,
                 image: '/images/test-header-image.jpg',
                 title: { 'en-US': 'Albufeira', 'nl-NL': 'Albufeira' },
-                categoryId: 'climbing-weekend',
+                categoryId: 'outdoor',
                 categoryName: { 'en-US': 'Climbing Weekend', 'nl-NL': 'Klimweekend' },
                 descriptionMarkdown: { 'en-US': 'This event is full!', 'nl-NL': 'Deze activiteit zit vol!' },
                 registrations: 20,
-                startDateTime: '2022-11-06T00:00:00.000Z',
-                endDateTime: '2022-11-07T00:00:00.000Z',
+                startDateTime: '2025-11-06T00:00:00.000Z',
+                endDateTime: '2025-11-07T00:00:00.000Z',
                 registerState: 'full'
             },
             {
                 id: 3,
                 image: '/images/test-header-image.jpg',
                 title: { 'en-US': 'Albufeira', 'nl-NL': 'Albufeira' },
-                categoryId: 'climbing-weekend',
+                categoryId: 'exam',
                 categoryName: { 'en-US': 'Climbing Weekend', 'nl-NL': 'Klimweekend' },
                 descriptionMarkdown: { 'en-US': 'Dit examen!', 'nl-NL': 'Je moet je registreren om mee te doen!' },
                 registrations: null,
-                startDateTime: '2022-11-06T00:00:00.000Z',
-                endDateTime: '2022-11-07T00:00:00.000Z',
+                startDateTime: '2025-11-06T00:00:00.000Z',
+                endDateTime: '2025-11-06T01:00:00.000Z',
                 registerState: 'login'
             },
             {
@@ -72,8 +74,8 @@ export default function Agenda() {
                 categoryName: { 'en-US': 'Climbing Weekend', 'nl-NL': 'Klimweekend' },
                 descriptionMarkdown: { 'en-US': 'You must register to participate!', 'nl-NL': 'Je moet je registreren om mee te doen!' },
                 registrations: 12,
-                startDateTime: '2022-11-06T00:00:00.000Z',
-                endDateTime: '2022-11-07T00:00:00.000Z',
+                startDateTime: '2025-11-06T00:00:00.000Z',
+                endDateTime: '2025-11-07T00:00:00.000Z',
                 registerState: 'no-register'
             }
         ]
@@ -84,25 +86,25 @@ export default function Agenda() {
     return <GenericPage><div className="Agenda">
         <div className="Agenda-settings">
             <ContentCard>
-                <h1>Calender</h1>
-                <p>To register for activities you must first log in.</p>
-                <p>Questions about activities or climbing weekends? Contact the board or the climbing commissioner.</p>
+                <h1>{text("Calendar", "Agenda")}</h1>
+                <p>{text("To register for activities you must first log in.", "Om je aan te melden voor activiteiten moet je eerst ingelogd zijn.")}</p>
+                <p>{text("Questions about activities or climbing weekends? Contact the board or the climbing commissioner.", "Vragen over activiteiten of klimweekenden? Neem contact met het bestuur of de klimcommissaris.")}</p>
             </ContentCard>
             <ContentCard>
-                <h2>Filter</h2>
+                <h2>{text("Filter", "Filteren")}</h2>
                 <div className="form-group">
-                    <label>Categories</label>
+                    <label>{text("Categories", "Categorieën")}</label>
                     <select className="form-control" onChange={(e) => console.log(e.target.value)}>
-                        <option value="all">All</option>
+                        <option value="all">{text("All", "Alles")}</option>
                         {exampleAPIResponse.categories.map((category: any) => <option value={category.id} key={category.id}>{category[localeCode]}</option>)}
                     </select>
                 </div>
                 <div className="form-group">
-                    <label>From Date</label>
+                    <label>{text("From Date", "Vanaf")}</label>
                     <input type="date" className="form-control"></input>
                 </div>
                 <div className="form-group">
-                    <label>To Date</label>
+                    <label>{text("To Date", "Tot")}</label>
                     <input type="date" className="form-control"></input>
                 </div>
             </ContentCard>

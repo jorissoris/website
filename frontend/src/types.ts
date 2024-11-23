@@ -22,6 +22,7 @@ export interface ThemeContextType {
 
 export interface LanguageContextType {
   language: boolean;
+  getLangCode: () => string;
   getLocaleCode: () => string;
   setDutch: () => void;
   setEnglish: () => void;
