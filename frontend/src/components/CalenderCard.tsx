@@ -17,9 +17,12 @@ export default function CalenderCard(props: any) {
     const langCode = language.getLangCode();
     moment.locale(langCode);
 
-    const registerButton = props.registerState == 'register' ? <div className="register-button">{text("Register", "Aanmelden")}</div>
+    const registerButton = props.registerState == 'register' ?
+            (new Date(props.registrationOpenTime) > new Date() ? <p>{text("Registration opens at", "Aanmeldingen openen op")} {new Date(props.registrationOpenTime).toLocaleString(langCode)}</p>
+            : new Date(props.registrationCloseTime) > new Date() ? <div className="register-button">{text("Register", "Aanmelden")}</div>
+            : <p>{text("Registrations closed at", "Aanmeldingen zijn gesloten sinds")} {new Date(props.registrationCloseTime).toLocaleString(langCode)}</p>)
         : props.registerState == 'full' ? <div className="register-button full">{text("Full", "Vol"	)}</div>
-        : props.registerState == 'login' ? <div>{text("You must login to register", "Je moet inloggen om je aan te melden")}</div>
+        : props.registerState == 'login' ? <p>{text("You must login to register", "Je moet inloggen om je aan te melden")}</p>
         : <div></div>
 
     const startDate = new Date(props.startDateTime);

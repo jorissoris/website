@@ -40,19 +40,23 @@ export default function Agenda() {
                 registrations: 12,
                 startDateTime: '2025-03-06T00:00:00.000Z',
                 endDateTime: '2025-03-08T00:00:00.000Z',
-                registerState: 'register'
+                registerState: 'register',
+                registrationOpenTime: '2023-03-05T00:00:00.000Z',
+                registrationCloseTime: '2024-03-07T00:00:00.000Z'
             },
             {
                 id: 2,
                 image: '/images/test-header-image.jpg',
-                title: { 'en-US': 'Albufeira', 'nl-NL': 'Albufeira' },
-                categoryId: 'outdoor',
-                categoryName: { 'en-US': 'Climbing Weekend', 'nl-NL': 'Klimweekend' },
+                title: { 'en-US': 'Important exam', 'nl-NL': 'Belangrijk Examen' },
+                categoryId: 'exam',
+                categoryName: { 'en-US': 'Exam', 'nl-NL': 'Examen' },
                 descriptionMarkdown: { 'en-US': 'This event is full!', 'nl-NL': 'Deze activiteit zit vol!' },
                 registrations: 20,
                 startDateTime: '2025-11-06T00:00:00.000Z',
                 endDateTime: '2025-11-07T00:00:00.000Z',
-                registerState: 'full'
+                registerState: 'full',
+                registrationOpenTime: '2025-03-05T00:00:00.000Z',
+                registrationCloseTime: '2025-03-07T00:00:00.000Z'
             },
             {
                 id: 3,
@@ -61,10 +65,12 @@ export default function Agenda() {
                 categoryId: 'exam',
                 categoryName: { 'en-US': 'Climbing Weekend', 'nl-NL': 'Klimweekend' },
                 descriptionMarkdown: { 'en-US': 'Dit examen!', 'nl-NL': 'Je moet je registreren om mee te doen!' },
-                registrations: null,
+                registrations: 15,
                 startDateTime: '2025-11-06T00:00:00.000Z',
                 endDateTime: '2025-11-06T01:00:00.000Z',
-                registerState: 'login'
+                registerState: 'login',
+                registrationOpenTime: '2025-03-05T00:00:00.000Z',
+                registrationCloseTime: '2025-03-07T00:00:00.000Z'
             },
             {
                 id: 4,
@@ -76,7 +82,9 @@ export default function Agenda() {
                 registrations: 12,
                 startDateTime: '2025-11-06T00:00:00.000Z',
                 endDateTime: '2025-11-07T00:00:00.000Z',
-                registerState: 'no-register'
+                registerState: 'no-register',
+                registrationOpenTime: '2025-03-05T00:00:00.000Z',
+                registrationCloseTime: '2025-03-07T00:00:00.000Z'
             }
         ]
     };
