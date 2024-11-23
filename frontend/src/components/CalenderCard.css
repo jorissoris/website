@@ -1,7 +1,7 @@
 .CalenderCard {
     width: 100%;
     
-    background-color: white;
+    background-color: inherit;
 
     border-radius: 0.25rem;
 
@@ -49,6 +49,25 @@
                 color: rgba(1, 1, 1, 0.6);
                 cursor: not-allowed;
             }
+        }
+    }
+}
+
+#root[data-theme="dark"] .CalenderCard {
+    background-color: #121212;
+    border-color: rgba(255, 255, 255, 0.1);
+
+    .CalenderCard-content {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .register-button {
+        border-color: rgba(255, 255, 255, 0.3);
+        background-color: #121212;
+
+        &.full {
+            color: rgba(255, 255, 255, 0.6);
+            cursor: not-allowed;
         }
     }
 }

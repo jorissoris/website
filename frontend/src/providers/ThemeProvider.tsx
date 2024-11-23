@@ -22,6 +22,8 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
     [themeCookie]
   );
 
+  document.querySelector('#root')!.setAttribute('data-theme', themeCookie.theme ? 'dark' : 'light');
+
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 

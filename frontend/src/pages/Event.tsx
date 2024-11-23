@@ -62,7 +62,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ultricies q
             {registrationClosingWarning}
 
             <div className="bottom-buttons">
-                <div className="button"><EditIcon sx={{fontSize: '20px'}} />Edit Event</div>
+                <div className="button"><EditIcon sx={{fontSize: '20px'}} />{text("Edit Event", "Bewerk activiteit")}</div>
             </div>
         </ContentCard>
     </div></GenericPage>;

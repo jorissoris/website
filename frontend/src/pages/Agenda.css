@@ -50,3 +50,19 @@
         margin-top: 20px;
     }
 }
+
+[data-theme="dark"] .Agenda {
+    .Agenda-settings {
+        .form-group {
+            select {
+                background-color: #121212;
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+    
+            input[type='date'] {
+                background-color: #121212;
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+        }
+    }
+}

@@ -2,9 +2,17 @@
     width: 100%;
     border-radius: 0.25rem;
     padding: 30px;
-    background-color: white;
-    border: 1px solid rgba(1, 1, 1, 0.1);
+    background-color: inherit;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.1);
     border-bottom-color: brown;
     border-bottom-style: solid;
     border-bottom-width: 2px
+}
+
+#root[data-theme="dark"] .ContentCard {
+    background-color: #121212;
+    border-color: rgba(255, 255, 255, 0.1);
+    border-bottom-color: rgb(68, 14, 14);
 }

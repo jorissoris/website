@@ -42,7 +42,7 @@ export default function Agenda() {
                 endDateTime: '2025-03-08T00:00:00.000Z',
                 registerState: 'register',
                 registrationOpenTime: '2023-03-05T00:00:00.000Z',
-                registrationCloseTime: '2024-03-07T00:00:00.000Z'
+                registrationCloseTime: '2027-03-07T00:00:00.000Z'
             },
             {
                 id: 2,
