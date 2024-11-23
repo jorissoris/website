@@ -20,7 +20,7 @@ export default function CalenderCard(props: any) {
     return <div className='CalenderCard'>
         <img className="CalenderCard-image" src={props.image}></img>
         <div className="CalenderCard-content">
-            <TextCard>{props.category[localeCode]}</TextCard>&nbsp;&nbsp;<TextCard>{props.datetimes}</TextCard>
+            <TextCard>{props.categoryName[localeCode]}</TextCard>&nbsp;&nbsp;<TextCard>{props.datetimes}</TextCard>
             <h2>{props.title[localeCode]}</h2>
             <p>{props.descriptionMarkdown[localeCode]}</p>
         </div>
