@@ -1,5 +1,3 @@
-import './Agenda.css';
-
 import GenericPage from './GenericPage.tsx';
 import ContentCard from '../components/ContentCard.tsx';
 import CalenderCard from '../components/CalenderCard.tsx';
@@ -91,33 +89,33 @@ export default function Agenda() {
 
     const localeCode = useLanguage().getLocaleCode();
 
-    return <GenericPage><div className="Agenda">
-        <div className="Agenda-settings">
-            <ContentCard>
+    return <GenericPage><div className="Agenda font-family-sans">
+        <div className="grid grid-cols-[0.33fr_0.33fr_0.33fr] grid-rows-1 gap-5 mt-5">
+            <ContentCard className="col-start-1 col-end-3">
                 <h1>{text("Calendar", "Agenda")}</h1>
                 <p>{text("To register for activities you must first log in.", "Om je aan te melden voor activiteiten moet je eerst ingelogd zijn.")}</p>
                 <p>{text("Questions about activities or climbing weekends? Contact the board or the climbing commissioner.", "Vragen over activiteiten of klimweekenden? Neem contact met het bestuur of de klimcommissaris.")}</p>
             </ContentCard>
             <ContentCard>
                 <h2>{text("Filter", "Filteren")}</h2>
-                <div className="form-group">
-                    <label>{text("Categories", "Categorieën")}</label>
-                    <select className="form-control" onChange={(e) => setSelectedCategory(e.target.value)}>
+                <div className="flex flex-col">
+                    <label className="mt-1">{text("Categories", "Categorieën")}</label>
+                    <select className="rounded-sm border border-black/10 pt-1.5 pb-1.5 pl-1.25 pr-2.5 dark:bg-[#121212] dark:border-[rgba(255,255,255,0.1)]" onChange={(e) => setSelectedCategory(e.target.value)}>
                         <option value="all">{text("All", "Alles")}</option>
                         {exampleAPIResponse.categories.map((category: any) => <option value={category.id} key={category.id}>{category[localeCode]}</option>)}
                     </select>
                 </div>
-                <div className="form-group">
-                    <label>{text("From Date", "Vanaf")}</label>
-                    <input type="date" className="form-control" onChange={e => {
+                <div className="flex flex-col">
+                    <label className="mt-1">{text("From Date", "Vanaf")}</label>
+                    <input type="date" className="rounded-sm border border-black/10 p-1.5 pl-1.25 pr-1.25 dark:bg-[#121212] dark:border-[rgba(255,255,255,0.1)]" onChange={e => {
                         if (e.target.value && !isNaN(new Date(e.target.value).getTime())) {
                             setFromDateTime(new Date(e.target.value))
                         }
                     }} value={fromDateTime.toISOString().split('T')[0]}></input>
                 </div>
-                <div className="form-group">
-                    <label>{text("To Date", "Tot")}</label>
-                    <input type="date" className="form-control" onChange={e => {
+                <div className="flex flex-col">
+                    <label className="mt-1">{text("To Date", "Tot")}</label>
+                    <input type="date" className="rounded-sm border border-black/10 p-1.5 pl-1.25 pr-1.25 dark:bg-[#121212] dark:border-[rgba(255,255,255,0.1)]" onChange={e => {
                         if (e.target.value && !isNaN(new Date(e.target.value).getTime())) {
                             setToDateTime(new Date(e.target.value))
                         }
@@ -126,7 +124,7 @@ export default function Agenda() {
             </ContentCard>
         </div>
 
-        <div className="Agenda-content">
+        <div className="Agenda-content grid grid-cols-[0.33fr_0.33fr_0.33fr] gap-5 mt-5">
             {exampleAPIResponse.events
                 .filter((e: any) => selectedCategory === 'all' || e.categoryId === selectedCategory)
                 .filter(e => e.startDateTime && new Date(e.endDateTime).getTime() >= fromDateTime.getTime() && new Date(e.startDateTime).getTime() <= toDateTime.getTime())

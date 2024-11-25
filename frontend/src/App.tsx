@@ -10,9 +10,12 @@ import Info from './alerts/Info.tsx';
 import MainMenu from './components/MainMenu.tsx';
 
 import router from './router.tsx';
+import { useEffect } from 'react';
+import { useLanguage } from './providers/LanguageProvider.tsx';
 
 export default function App() {
-  const { themeCookie } = useThemeMode();
+  const { themeCookie, toggleTheme } = useThemeMode();
+  const language = useLanguage();
 
   const darkTheme = createTheme({
     palette: {
@@ -53,6 +56,28 @@ export default function App() {
       }
     }
   });
+
+  // DEBUG: on "ctrl-,", flip the theme, on "ctrl-.", flip the language
+  const eventListener = (e: KeyboardEvent) => {
+    if (e.ctrlKey && e.key === ',') {
+      toggleTheme();
+    }
+
+    if (e.ctrlKey && e.key === '.') {
+      language.toggleLanguage();
+    }
+  }
+
+  if (import.meta.env.MODE === 'development') {
+    useEffect(() => {
+      addEventListener('keydown', eventListener)
+  
+      return () => {
+        removeEventListener('keydown', eventListener)
+      }
+    })
+  }
+
 
   return (
     <ThemeProvider theme={darkTheme}>

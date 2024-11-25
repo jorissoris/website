@@ -28,13 +28,16 @@ export default function LanguageProvider({ children }: LanguageProviderProps) {
   const getLocaleCode = () => (language ? 'en-US' : 'nl-NL');
   const getLangCode = () => (language ? 'en' : 'nl');
 
+  const toggleLanguage = () => (language ? setDutch() : setEnglish());
+
   const value = useMemo(
     () => ({
       language,
       getLocaleCode,
       getLangCode,
       setDutch,
-      setEnglish
+      setEnglish,
+      toggleLanguage
     }),
     [language]
   );

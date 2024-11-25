@@ -1,5 +1,3 @@
-import './Event.css';
-
 import GenericPage from './GenericPage.tsx';
 
 import CalenderCard from '../components/CalenderCard.tsx';
@@ -72,10 +70,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ultricies q
         },
         divider: {
             default: "rgba(255, 255, 255, 0.1)"
-        } 
+        }
     }, "dark");
 
-    return <GenericPage><div className="Event">
+    return <GenericPage><div className="grid grid-cols-[0.333fr_0.666fr] grid-rows-[1fr] gap-5 mt-5 mb-5 relative">
         <CalenderCard {...exampleAPIResponse}
             />
         <ContentCard>
@@ -83,8 +81,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ultricies q
 
             {registrationClosingWarning}
 
-            <div className="bottom-buttons">
-                <div className="button"><EditIcon sx={{fontSize: '20px'}} />{text("Edit Event", "Bewerk activiteit")}</div>
+            <div className="flex justify-end absolute bottom-5 right-5">
+                <div className="dark:border-[rgba(255,255,255,0.1)] ml-2 rounded-md border border-[rgba(1,1,1,0.1)] px-2.5 py-1.5 cursor-pointer font-semibold flex justify-center items-center"><EditIcon sx={{fontSize: '20px', marginRight: '5px'}} />{text("Edit Event", "Bewerk activiteit")}</div>
             </div>
         </ContentCard>
     </div>
@@ -92,7 +90,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ultricies q
     <ContentCard>
         <div className="Event-data">
             <h1>{text("Participants", "Deelnemers")}</h1>
-            <div className="data-table-holder">
+            <div className="-mb-[25px] -ml-[25px] -mr-[25px]">
             <DataTable
                 columns={[
                     {

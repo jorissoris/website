@@ -27,6 +27,7 @@ export interface LanguageContextType {
   getLocaleCode: () => string;
   setDutch: () => void;
   setEnglish: () => void;
+  toggleLanguage: () => void;
 }
 
 export interface FormsProps {

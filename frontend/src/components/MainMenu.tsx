@@ -1,5 +1,3 @@
-import './MainMenu.css';
-
 import { useState, MouseEvent, useEffect } from 'react';
 import {
   AppBar,
@@ -67,7 +65,7 @@ export default function MainMenu() {
 
   return (
     <>
-      <AppBar position="fixed" classes={{root: (offset === 0 ? 'MainMenu-transparent' : 'MainMenu-opaque') + ' MainMenu'}}>
+      <AppBar position="fixed" classes={{root: (offset === 0 && '!bg-transparent !shadow-none') + ' !transition-all !duration-200 !ease-in-out'}}>
         <Toolbar className="flex justify-between w-1/2 m-auto">
           {/* Menu Items */}
           <div className="flex items-center">

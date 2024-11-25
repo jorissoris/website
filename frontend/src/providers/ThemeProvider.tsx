@@ -27,7 +27,14 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
     [themeCookie]
   );
 
-  document.querySelector('#root')!.setAttribute('data-theme', getThemeName());
+  const rootElement = document.querySelector("#root");
+  if (rootElement) {
+    if (getThemeName() === "dark") {
+      rootElement.classList.add("dark"); // classList is internally a set, so it doesn't matter if we add it twice
+    } else {
+      rootElement.classList.remove("dark");
+    }
+  }
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
