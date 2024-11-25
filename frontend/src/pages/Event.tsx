@@ -16,9 +16,10 @@ import Markdown from 'react-markdown'
 import DataTable, { createTheme } from 'react-data-table-component';
 
 import { useThemeMode } from '../providers/ThemeProvider.tsx';
+import { ExpandedCalendarEventType } from '../types.ts';
 
 export default function Event() {
-    const exampleAPIResponse: any = {
+    const exampleAPIResponse: ExpandedCalendarEventType = {
         id: 1,
         image: '/images/test-header-image.jpg',
         title: { 'en-US': 'Albufeira', 'nl-NL': 'Albufeira' },

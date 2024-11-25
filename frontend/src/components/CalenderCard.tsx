@@ -9,8 +9,9 @@ import moment from 'moment';
 import text from '../util.ts';
 
 import 'moment/dist/locale/nl'
+import { CalendarEventType } from '../types.ts';
 
-export default function CalenderCard(props: any) {
+export default function CalenderCard(props: CalendarEventType) {
     const language = useLanguage();
     const localeCode = language.getLocaleCode();
     const langCode = language.getLangCode();

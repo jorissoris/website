@@ -44,6 +44,38 @@ export interface ValidateProps {
   setValue: Dispatch<SetStateAction<string>>;
 }
 
+export interface I18nType<T> {
+  [K: string]: T;
+  'en-US': T;
+  'nl-NL': T;
+}
+
+export type I18nStringType = I18nType<string>;
+
+export interface CalendarCategoryType extends I18nStringType {
+  'id': string;
+}
+
+export interface CalendarEventType {
+  id: string | number;
+  image: string;
+  title: I18nStringType;
+  categoryId: string;
+  categoryName: I18nStringType;
+  descriptionMarkdown: I18nStringType;
+  registrations: number;
+  startDateTime: string;
+  endDateTime: string;
+  registerState: string;
+  registrationOpenTime: string;
+  registrationCloseTime: string;
+}
+
+export interface ExpandedCalendarEventType extends CalendarEventType {
+  expandedDescriptionMarkdown: I18nStringType;
+  registrationsTable: { [K: string]: string | number; }[];
+}
+
 export interface UserType {
   id: string;
   created: string;

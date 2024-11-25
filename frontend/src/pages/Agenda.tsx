@@ -8,6 +8,8 @@ import { useLanguage } from '../providers/LanguageProvider.tsx';
 
 import { useState } from 'react';
 
+import { CalendarCategoryType, CalendarEventType } from '../types.ts';
+
 export default function Agenda() {
     const currentDay = new Date();
     currentDay.setHours(0, 0, 0, 0);
@@ -102,7 +104,7 @@ export default function Agenda() {
                     <label className="mt-1">{text("Categories", "Categorieën")}</label>
                     <select className="rounded-sm border border-black/10 pt-1.5 pb-1.5 pl-1.25 pr-2.5 dark:bg-[#121212] dark:border-[rgba(255,255,255,0.1)]" onChange={(e) => setSelectedCategory(e.target.value)}>
                         <option value="all">{text("All", "Alles")}</option>
-                        {exampleAPIResponse.categories.map((category: any) => <option value={category.id} key={category.id}>{category[localeCode]}</option>)}
+                        {exampleAPIResponse.categories.map((category: CalendarCategoryType) => <option value={category.id} key={category.id}>{category[localeCode]}</option>)}
                     </select>
                 </div>
                 <div className="flex flex-col">
@@ -126,9 +128,9 @@ export default function Agenda() {
 
         <div className="Agenda-content grid grid-cols-[0.33fr_0.33fr_0.33fr] gap-5 mt-5">
             {exampleAPIResponse.events
-                .filter((e: any) => selectedCategory === 'all' || e.categoryId === selectedCategory)
+                .filter((e: CalendarEventType) => selectedCategory === 'all' || e.categoryId === selectedCategory)
                 .filter(e => e.startDateTime && new Date(e.endDateTime).getTime() >= fromDateTime.getTime() && new Date(e.startDateTime).getTime() <= toDateTime.getTime())
-                .map((event: any) => <CalenderCard {...event} key={event.id} />)}
+                .map((event: CalendarEventType) => <CalenderCard {...event} key={event.id} />)}
         </div>
 
         <div className="Agenda-pagination">
