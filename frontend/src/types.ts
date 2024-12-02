@@ -53,7 +53,7 @@ export interface I18nType<T> {
 export type I18nStringType = I18nType<string>;
 
 export interface CalendarCategoryType extends I18nStringType {
-  'id': string;
+  id: string;
 }
 
 export interface CalendarEventType {
@@ -73,7 +73,7 @@ export interface CalendarEventType {
 
 export interface ExpandedCalendarEventType extends CalendarEventType {
   expandedDescriptionMarkdown: I18nStringType;
-  registrationsTable: { [K: string]: string | number; }[];
+  registrationsTable: { [K: string]: string | number }[];
 }
 
 export interface UserType {

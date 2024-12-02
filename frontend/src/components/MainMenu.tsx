@@ -52,20 +52,26 @@ export default function MainMenu() {
     setOpenMenu(undefined);
   };
 
-
   const [offset, setOffset] = useState(window.scrollY);
 
   useEffect(() => {
-      const onScroll = () => setOffset(window.scrollY);
-      // clean up code
-      window.removeEventListener('scroll', onScroll);
-      window.addEventListener('scroll', onScroll, { passive: true });
-      return () => window.removeEventListener('scroll', onScroll);
+    const onScroll = () => setOffset(window.scrollY);
+    // clean up code
+    window.removeEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   return (
     <>
-      <AppBar position="fixed" classes={{root: (offset === 0 && '!bg-transparent !shadow-none') + ' !transition-all !duration-200 !ease-in-out'}}>
+      <AppBar
+        position="fixed"
+        classes={{
+          root:
+            (offset === 0 && '!bg-transparent !shadow-none') +
+            ' !transition-all !duration-200 !ease-in-out'
+        }}
+      >
         <Toolbar className="flex justify-between w-1/2 m-auto">
           {/* Menu Items */}
           <div className="flex items-center">
@@ -84,7 +90,8 @@ export default function MainMenu() {
             <Button
               color="inherit"
               className="flex items-center"
-              onClick={(e) => handleMenuOpen(e, 'association')}>
+              onClick={(e) => handleMenuOpen(e, 'association')}
+            >
               {text('Association', 'Vereniging')} <ExpandMoreIcon />
             </Button>
             <Menu anchorEl={anchorEl} open={openMenu === 'association'} onClose={handleMenuClose}>
@@ -100,7 +107,8 @@ export default function MainMenu() {
             <Button
               color="inherit"
               className="flex items-center"
-              onClick={(e) => handleMenuOpen(e, 'climbing')}>
+              onClick={(e) => handleMenuOpen(e, 'climbing')}
+            >
               {text('Climbing', 'Klimmen')} <ExpandMoreIcon />
             </Button>
             <Menu anchorEl={anchorEl} open={openMenu === 'climbing'} onClose={handleMenuClose}>
@@ -122,7 +130,8 @@ export default function MainMenu() {
             <Button
               color="inherit"
               className="flex items-center"
-              onClick={(e) => handleMenuOpen(e, 'alps')}>
+              onClick={(e) => handleMenuOpen(e, 'alps')}
+            >
               {text('Alps', 'Alpen')} <ExpandMoreIcon />
             </Button>
             <Menu anchorEl={anchorEl} open={openMenu === 'alps'} onClose={handleMenuClose}>
@@ -149,7 +158,8 @@ export default function MainMenu() {
             <Button
               color="inherit"
               className="flex items-center"
-              onClick={(e) => handleMenuOpen(e, 'language')}>
+              onClick={(e) => handleMenuOpen(e, 'language')}
+            >
               {text('Language', 'Taal')}
               <ExpandMoreIcon />
             </Button>
@@ -176,14 +186,20 @@ export default function MainMenu() {
             ) : (
               <>
                 {/* Login+Become Member / Logout */}
-                {!isLoggedIn ? <><Button color="inherit" onClick={handleLoginOpen}>
-                  {text('Login', 'Inloggen')}</Button>
-                  <Button variant="contained" onClick={handleSignupOpen}>
-                  {text('Become a member', 'Lid worden')}
-                </Button></>
-                : <Button color="inherit" onClick={logout}>
-                  {text('Logout', 'Uitloggen')}
-                </Button>}
+                {!isLoggedIn ? (
+                  <>
+                    <Button color="inherit" onClick={handleLoginOpen}>
+                      {text('Login', 'Inloggen')}
+                    </Button>
+                    <Button variant="contained" onClick={handleSignupOpen}>
+                      {text('Become a member', 'Lid worden')}
+                    </Button>
+                  </>
+                ) : (
+                  <Button color="inherit" onClick={logout}>
+                    {text('Logout', 'Uitloggen')}
+                  </Button>
+                )}
               </>
             )}
           </div>

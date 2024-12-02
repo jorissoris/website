@@ -16,7 +16,7 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
 
   const getThemeName = () => {
     return themeCookie.theme ? 'dark' : 'light';
-  }
+  };
 
   const value = useMemo(
     () => ({
@@ -27,12 +27,12 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
     [themeCookie]
   );
 
-  const rootElement = document.querySelector("#root");
+  const rootElement = document.querySelector('#root');
   if (rootElement) {
-    if (getThemeName() === "dark") {
-      rootElement.classList.add("dark"); // classList is internally a set, so it doesn't matter if we add it twice
+    if (getThemeName() === 'dark') {
+      rootElement.classList.add('dark'); // classList is internally a set, so it doesn't matter if we add it twice
     } else {
-      rootElement.classList.remove("dark");
+      rootElement.classList.remove('dark');
     }
   }
 

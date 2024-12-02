@@ -66,18 +66,17 @@ export default function App() {
     if (e.ctrlKey && e.key === '.') {
       language.toggleLanguage();
     }
-  }
+  };
 
   if (import.meta.env.MODE === 'development') {
     useEffect(() => {
-      addEventListener('keydown', eventListener)
-  
-      return () => {
-        removeEventListener('keydown', eventListener)
-      }
-    })
-  }
+      addEventListener('keydown', eventListener);
 
+      return () => {
+        removeEventListener('keydown', eventListener);
+      };
+    });
+  }
 
   return (
     <ThemeProvider theme={darkTheme}>

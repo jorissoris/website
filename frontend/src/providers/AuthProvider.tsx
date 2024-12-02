@@ -12,7 +12,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   const [user, setUser] = useState<UserType | undefined>(undefined);
-  
+
   const checkAuth = async () => {
     try {
       const response = await fetch('/api/whoami', {
@@ -56,7 +56,11 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  return <AuthContext.Provider value={{ user, isLoggedIn, checkAuth, logout }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, isLoggedIn, checkAuth, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export const useAuth = (): AuthContextType => {
