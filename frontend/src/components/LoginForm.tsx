@@ -6,6 +6,7 @@ import { FormsProps } from '../types';
 import { enqueueSnackbar } from 'notistack';
 import ValidatedTextField from './ValidatedTextField';
 import { emailValidator, noneValidator } from './validator.ts';
+import text from '../util.ts';
 
 export default function LoginForm({ onClose, setLoading }: FormsProps) {
   const [email, setEmail] = useState<string>('');
@@ -50,28 +51,30 @@ export default function LoginForm({ onClose, setLoading }: FormsProps) {
   };
 
   return (
-    <div className="grid grid-cols-1 grid-flow-row gap-2">
-      <div className="flex justify-between">
-        <p className="text-2xl">Log In</p>
-        <IconButton onClick={onClose}>
-          <Close />
-        </IconButton>
+    <>
+      <div className="grid grid-cols-1 grid-flow-row gap-2">
+        <div className="flex justify-between">
+          <p className="text-2xl">Log In</p>
+          <IconButton onClick={onClose}>
+            <Close />
+          </IconButton>
+        </div>
+        <ValidatedTextField
+          label={'Email'}
+          validator={emailValidator}
+          onChange={(isValid) => (formValid.current.email = isValid)}
+          setValue={setEmail}
+        />
+        <ValidatedPassword
+          label={text('Password', 'Wachtwoord')}
+          validator={noneValidator}
+          onChange={(isValid) => (formValid.current.password = isValid)}
+          setValue={setPassword}
+        />
+        <Button variant="contained" onClick={handleSubmit}>
+          {text('Login', 'Inloggen')}
+        </Button>
       </div>
-      <ValidatedTextField
-        label={'Email'}
-        validator={emailValidator}
-        onChange={(isValid) => (formValid.current.email = isValid)}
-        setValue={setEmail}
-      />
-      <ValidatedPassword
-        label={'Password'}
-        validator={noneValidator}
-        onChange={(isValid) => (formValid.current.password = isValid)}
-        setValue={setPassword}
-      />
-      <Button variant="contained" onClick={handleSubmit}>
-        Log In
-      </Button>
-    </div>
+    </>
   );
 }
