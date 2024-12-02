@@ -24,7 +24,7 @@ import router from '../router.tsx';
 type MenuName = 'association' | 'climbing' | 'alps' | 'language' | undefined;
 
 export default function MainMenu() {
-  const { isLoggedIn, checkAuth, logout } = useAuth();
+  const { isLoggedIn, logout } = useAuth();
   const { setEnglish, setDutch } = useLanguage();
   const [loading, setLoading] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | undefined>(undefined);

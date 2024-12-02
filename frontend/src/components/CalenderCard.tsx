@@ -1,4 +1,3 @@
-import { dividerClasses } from '@mui/material';
 import { useLanguage } from '../providers/LanguageProvider.tsx';
 
 import TextCard from './TextCard.tsx';
@@ -66,7 +65,7 @@ export default function CalenderCard(props: CalendarEventType) {
   const startMonth = startDate.getMonth() + 1;
   const endMonth = endDate.getMonth() + 1;
 
-  let dateResultString = '';
+  let dateResultString;
 
   if (startDate.getTime() === endDate.getTime()) {
     // Show only start date and time

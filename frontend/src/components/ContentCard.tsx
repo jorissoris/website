@@ -1,8 +1,10 @@
+import { ReactNode } from 'react';
+
 export default function ContentCard({
   children,
   className
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }) {
   return (

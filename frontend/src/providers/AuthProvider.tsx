@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, ReactNode, useState } from 'react';
+import { createContext, useContext, ReactNode, useState } from 'react';
 import { AuthContextType, UserType } from '../types.ts';
 import { enqueueSnackbar } from 'notistack';
 
